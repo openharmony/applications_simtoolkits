@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"Boîte à outils SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

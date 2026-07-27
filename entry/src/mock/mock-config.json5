@@ -1,0 +1,5 @@
+{
+  "@ohos.telephony.sim": {
+    "source": "src/mock/module/ohos/sim.mock.ets"
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"Bộ công cụ SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

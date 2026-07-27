@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"Kit Alat SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

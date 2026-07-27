@@ -1,0 +1,12 @@
+{
+  "app": {
+    "bundleName": "com.ohos.simtoolkits",
+    "vendor": "ohos",
+    "versionCode": 600100006,
+    "versionName": "6.1.0.6",
+    "icon": "$media:ic_launcher",
+    "label": "$string:app_name",
+    "distributedNotificationEnabled": true,
+    "configuration": "$profile:configuration"
+  }
+}

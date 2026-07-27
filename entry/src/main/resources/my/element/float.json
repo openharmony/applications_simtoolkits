@@ -1,0 +1,12 @@
+{
+  "float": [
+    {
+      "name": "alert_toast_text_line_spacing",
+      "value": "10vp"
+    },
+    {
+      "name": "alert_toast_padding_vertical_big",
+      "value": "1"
+    }
+  ]
+}
