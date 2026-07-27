@@ -1,0 +1,151 @@
+{
+    "string":[
+        {
+            "name":"confirm",
+            "value":"OK",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"digits",
+            "value":"Chiffres (0-9, *, #, +)",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"Lancer Navigateur ?",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"help",
+            "value":"Aide",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"Réception des données en cours.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"sim_card_application",
+            "value":"Boîte à outils de la SIM %s",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"button_no",
+            "value":"Non",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_open_channel_msg",
+            "value":"Ouvrir un canal ?",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"Canal fermé",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"Appel en cours.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"Sonnerie de jeu",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"end_session",
+            "value":"Mettre fin à la session",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"please_insert_card",
+            "value":"Veuillez insérer une carte SIM.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_yes",
+            "value":"Oui",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"cancel",
+            "value":"Annuler",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"Nouveau message relatif au service mobile",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"Boîte à outils SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"alphabet",
+            "value":"Alphanumérique",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"no_menu",
+            "value":"Aucun menu Boîte à outils SIM.",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"Envoi des données en cours.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"Kit d'outils eSIM %s",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

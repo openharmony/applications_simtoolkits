@@ -1,0 +1,151 @@
+{
+    "string":[
+        {
+            "name":"confirm",
+            "value":"OK",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"digits",
+            "value":"Digit (0-9, *, #, +)",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"Lancarkan Pelayar?",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"help",
+            "value":"Bantuan",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"Menerima data\u2026",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"sim_card_application",
+            "value":"Kit alat SIM %s",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_no",
+            "value":"Tidak",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_open_channel_msg",
+            "value":"Buka saluran?",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"Kit alat eSIM %s",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"Saluran ditutup",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"Memanggil…",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"Nada main",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"end_session",
+            "value":"Tamatkan sesi",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"please_insert_card",
+            "value":"Sila masukkan kad SIM.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_yes",
+            "value":"Ya",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"cancel",
+            "value":"Batalkan",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"Mesej perkhidmatan mudah alih baru",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"Kit Alat SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"alphabet",
+            "value":"Abjad angka",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"no_menu",
+            "value":"Kit Alat SIM tidak tersedia pada kad SIM ini.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"Menghantar data\u2026",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

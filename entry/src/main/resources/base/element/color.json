@@ -1,0 +1,20 @@
+{
+  "color": [
+    {
+      "name": "color_divider",
+      "value": "#0D000000"
+    },
+    {
+      "name": "color_white",
+      "value": "#ffffff"
+    },
+    {
+      "name": "start_window_background",
+      "value": "#F1F3F5"
+    },
+    {
+      "name": "alert_toast_bg_color",
+      "value": "#FFFFFF"
+    }
+  ]
+}

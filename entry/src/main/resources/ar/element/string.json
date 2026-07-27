@@ -1,0 +1,151 @@
+{
+    "string":[
+        {
+            "name":"confirm",
+            "value":"موافق",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"digits",
+            "value":"الأرقام (0-9، *، #، +)",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"هل تريد تشغيل المتصفح؟",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"help",
+            "value":"مساعدة",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"جارٍ استلام البيانات \u2026",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"sim_card_application",
+            "value":"أدوات البطاقة %s",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_no",
+            "value":"لا",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_open_channel_msg",
+            "value":"هل تريد فتح القناة؟",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"القناة مغلقة",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"جارٍ الاتصال…",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"نغمة التشغيل",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"end_session",
+            "value":"إنهاء الجلسة",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"please_insert_card",
+            "value":"يُرجى إدخال بطاقة SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_yes",
+            "value":"نعم",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"cancel",
+            "value":"إلغاء",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"رسالة جديدة متعلقة بخدمة الجوال",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"أدوات بطاقة SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"alphabet",
+            "value":"أبجدية رقمية",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"no_menu",
+            "value":"قائمة أدوات بطاقة SIM غير متاحة",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"جارٍ إرسال البيانات \u2026",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"أدوات بطاقة eSIM %s‎",
+            "attr":{
+                "priority":"translate"
+            }
+        }
+    ]
+}

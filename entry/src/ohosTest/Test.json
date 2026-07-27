@@ -1,0 +1,49 @@
+{
+  "driver": {
+    "type": "OHJSUnitTest",
+    "test-timeout": "300000",
+    "bundle-name": "com.ohos.simtoolkits",
+    "module-name": "entry_test",
+    "shell-timeout": "600000",
+    "testcase-timeout": "300000",
+    "compile-mode": "esmodule",
+    "coverage": true,
+    "package-tool-path": "D:\\Local\\coverage2.0\\node_modules\\@ohos\\coverage"
+  },
+  "kits": [
+    {
+      "type": "ShellKit",
+      "run-command": [
+        "mount -o remount,rw /",
+        "target mount",
+        "power-shell wakeup",
+        "uinput -T -m 540 1752 540 751 500",
+        "uinput -T -c 630 1683",
+        "power-shell timeout -o 1800000",
+        "power-shell setmode 602",
+        "setenforce 0"
+      ],
+      "teardown-command": [
+        "mount -o rw,remount /",
+        "target mount",
+        "setenforce 1",
+        "power-shell setmode 600"
+      ]
+    },
+    {
+      "push": "HwSimToolkits.hap->/system/app/HwSimToolkits/HwSimToolkits.hap",
+      "type": "PushKit",
+      "post-push": [
+        "bm uninstall -n com.ohos.simtoolkits",
+        "bm install -p /system/app/HwSimToolkits/HwSimToolkits.hap"
+      ]
+    },
+    {
+      "test-file-name": [
+        "HwSimToolkitsTest.hap"
+      ],
+      "type": "AppInstallKit",
+      "cleanup-apps": true
+    }
+  ]
+}

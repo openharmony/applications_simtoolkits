@@ -1,0 +1,192 @@
+{
+  "float": [
+    {
+      "name": "wh_min24",
+      "value": "-24vp"
+    },
+    {
+      "name": "wh_3",
+      "value": "3vp"
+    },
+    {
+      "name": "wh_4",
+      "value": "4vp"
+    },
+    {
+      "name": "wh_6",
+      "value": "6vp"
+    },
+    {
+      "name": "wh_8",
+      "value": "8vp"
+    },
+    {
+      "name": "wh_10",
+      "value": "10vp"
+    },
+    {
+      "name": "wh_12",
+      "value": "12vp"
+    },
+    {
+      "name": "wh_15",
+      "value": "15vp"
+    },
+    {
+      "name": "wh_16",
+      "value": "16vp"
+    },
+    {
+      "name": "wh_18",
+      "value": "18vp"
+    },
+    {
+      "name": "wh_19",
+      "value": "19vp"
+    },
+    {
+      "name": "wh_20",
+      "value": "20vp"
+    },
+    {
+      "name": "wh_22",
+      "value": "22vp"
+    },
+    {
+      "name": "wh_24",
+      "value": "24vp"
+    },
+    {
+      "name": "wh_25",
+      "value": "25vp"
+    },
+    {
+      "name": "wh_28",
+      "value": "28vp"
+    },
+    {
+      "name": "wh_21",
+      "value": "28vp"
+    },
+    {
+      "name": "wh_32",
+      "value": "32vp"
+    },
+    {
+      "name": "wh_36",
+      "value": "36vp"
+    },
+    {
+      "name": "wh_40",
+      "value": "40vp"
+    },
+    {
+      "name": "wh_48",
+      "value": "48vp"
+    },
+    {
+      "name": "wh_50",
+      "value": "50vp"
+    },
+    {
+      "name": "wh_56",
+      "value": "56vp"
+    },
+    {
+      "name": "wh_112",
+      "value": "112vp"
+    },
+    {
+      "name": "wh_130",
+      "value": "130vp"
+    },
+    {
+      "name": "wh_144",
+      "value": "144vp"
+    },
+    {
+      "name": "wh_224",
+      "value": "224vp"
+    },
+    {
+      "name": "font_10",
+      "value": "10fp"
+    },
+    {
+      "name": "font_14",
+      "value": "14fp"
+    },
+    {
+      "name": "font_15",
+      "value": "15fp"
+    },
+    {
+      "name": "font_16",
+      "value": "16fp"
+    },
+    {
+      "name": "font_20",
+      "value": "20fp"
+    },
+    {
+      "name": "alert_tone_ic_width",
+      "value": "50vp"
+    },
+    {
+      "name": "alert_tone_ic_height",
+      "value": "48vp"
+    },
+    {
+      "name": "alert_window_content_font_size",
+      "value": "16fp"
+    },
+    {
+      "name": "alert_window_content_margin",
+      "value": "8vp"
+    },
+    {
+      "name": "alert_toast_padding_horizontal",
+      "value": "16vp"
+    },
+    {
+      "name": "alert_toast_padding_vertical",
+      "value": "8vp"
+    },
+    {
+      "name": "alert_toast_content_max_width",
+      "value": "260vp"
+    },
+    {
+      "name": "alert_toast_radius",
+      "value": "18vp"
+    },
+    {
+      "name": "alert_toast_bottom",
+      "value": "120vp"
+    },
+    {
+      "name": "alert_toast_min_height",
+      "value": "36vp"
+    },
+    {
+      "name": "alert_dialog_radius",
+      "value": "24vp"
+    },
+    {
+      "name": "alert_dialog_vertical_padding",
+      "value": "16vp"
+    },
+    {
+      "name": "cust_padding",
+      "value": "16vp"
+    },
+    {
+      "name": "alert_toast_text_line_spacing",
+      "value": "6vp"
+    },
+    {
+      "name": "alert_toast_padding_vertical_big",
+      "value": "0"
+    }
+  ]
+}
