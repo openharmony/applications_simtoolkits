@@ -1,0 +1,102 @@
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "srcEntry":"./ets/application/SimToolKitApplication.ets",
+    "description": "$string:module_desc",
+    "mainElement": "EntryAbility",
+    "deviceTypes":[
+        "default",
+        "tablet"
+    ],
+    "metadata": [
+      {
+        "name": "ohos.graphics2d.text.adapter_text_height"
+      }
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "EntryAbility",
+        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "description": "$string:mainability_description",
+        "icon": "$media:layeredImage",
+        "label": "$string:simtoolkit_MainAbility",
+        "startWindowIcon": "$media:starting_window",
+        "startWindowBackground": "$color:start_window_background",
+        "orientation": "follow_desktop",
+        "exported": true,
+        "permissions": [
+          "ohos.permission.SET_TELEPHONY_STATE"
+        ],
+        "launchType": "singleton",
+        "removeMissionAfterTerminate": true
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "ServiceExtAbility",
+        "srcEntry": "./ets/ServiceExtAbility/ServiceExtAbility.ets",
+        "description": "service",
+        "icon": "$media:layeredImage",
+        "type": "service",
+        "permissions": [
+          "ohos.permission.SET_TELEPHONY_STATE"
+        ],
+        "exported": true
+      }
+    ],
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.SET_TELEPHONY_STATE"
+      },
+      {
+        "name": "ohos.permission.PRIVACY_WINDOW"
+      },
+      {
+        "name": "ohos.permission.UPDATE_CONFIGURATION"
+      },
+      {
+        "name": "ohos.permission.START_ABILITIES_FROM_BACKGROUND"
+      },
+      {
+        "name": "ohos.permission.ACCESS_NOTIFICATION_POLICY"
+      },
+      {
+        "name": "ohos.permission.KEEP_BACKGROUND_RUNNING"
+      },
+      {
+        "name": "ohos.permission.VIBRATE"
+      },
+      {
+        "name": "ohos.permission.MANAGE_SETTINGS"
+      },
+      {
+        "name": "ohos.permission.GET_RUNNING_INFO"
+      },
+      {
+        "name": "ohos.permission.RUNNING_STATE_OBSERVER"
+      },
+      {
+        "name": "ohos.permission.SYSTEM_FLOAT_WINDOW"
+      },
+      {
+        "name": "ohos.permission.CALLED_BELOW_LOCK_SCREEN"
+      },
+      {
+        "name": "ohos.permission.INPUT_MONITORING"
+      },
+      {
+        "name": "ohos.permission.ACCESS_SYSTEM_SETTINGS"
+      },
+      {
+        "name": "ohos.permission.GET_TELEPHONY_STATE"
+      },
+      {
+        "name": "ohos.permission.POWER_MANAGER"
+      }
+    ]
+  }
+}

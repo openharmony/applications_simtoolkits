@@ -1,0 +1,151 @@
+{
+    "string":[
+        {
+            "name":"confirm",
+            "value":"OK",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"digits",
+            "value":"Cyfry (0–9, *, #, +)",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"Uruchomić Przeglądarkę?",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"help",
+            "value":"Pomoc",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"Odbieranie danych\u2026",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"sim_card_application",
+            "value":"Narzędzia SIM %s",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_no",
+            "value":"Nie",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_open_channel_msg",
+            "value":"Otworzyć kanał?",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"Narzędzia eSIM %s",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"Zamknięto kanał",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"Dzwonienie…",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"Odtwarzanie",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"end_session",
+            "value":"Zakończ sesję",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"please_insert_card",
+            "value":"Włóż kartę SIM.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_yes",
+            "value":"Tak",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"cancel",
+            "value":"Anuluj",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"Nowa wiadomość usługi mobilnej",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"Narzędzia SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"alphabet",
+            "value":"Znaki alfanumeryczne",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"no_menu",
+            "value":"Narzędzia SIM niedostępne na tej karcie SIM.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"Wysyłanie danych\u2026",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

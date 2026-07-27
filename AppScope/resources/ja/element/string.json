@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"SIMツールキット",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

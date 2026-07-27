@@ -1,0 +1,16 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#000000"
+    },
+    {
+      "name": "alert_toast_bg_color",
+      "value": "#F24D4D4D"
+    },
+    {
+      "name": "color_divider",
+      "value": "#0DFFFFFF"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+    "string":[
+        {
+            "name":"mainability_description",
+            "value":"HwSimToolkits Ability"
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"SIM Toolkit",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"simtoolkit_StaticSubscriber",
+            "value":"StaticSubscriber"
+        },
+        {
+            "name":"module_desc",
+            "value":"module_desc"
+        },
+        {
+            "name":"sim_card_application",
+            "value":"SIM %s Toolkit",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"ExtensionAbility_desc",
+            "value":"description"
+        },
+        {
+            "name":"ExtensionAbility_label",
+            "value":"label"
+        },
+        {
+            "name":"StaticSubscriberExtensionAbility_desc",
+            "value":"description"
+        },
+        {
+            "name":"StaticSubscriberExtensionAbility_label",
+            "value":"label"
+        },
+        {
+            "name":"cancel",
+            "value":"Cancel",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"confirm",
+            "value":"OK",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"Playing",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"stk_channel_name",
+            "value":"Mobile service messages"
+        },
+        {
+            "name":"please_insert_card",
+            "value":"Please insert a SIM.",
+            "attr":{
+                "priority":"customer"
+            }
+        },
+        {
+            "name":"no_menu",
+            "value":"SIM Toolkit is not available on this SIM card.",
+            "attr":{
+                "priority":"customer"
+            }
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"Calling…",
+            "attr":{
+                "priority":"customer"
+            }
+        },
+        {
+            "name":"default_open_channel_msg",
+            "value":"Open channel?",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"Sending data\u2026",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"Receiving data\u2026",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"Channel closed",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"help",
+            "value":"Help",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"end_session",
+            "value":"End session",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_yes",
+            "value":"Yes",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_no",
+            "value":"No",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"alphabet",
+            "value":"Alphanumeric",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"digits",
+            "value":"Digits (0-9, *, #, +)",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"Launch Browser?",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"New mobile service message",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"eSIM %s toolkit",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

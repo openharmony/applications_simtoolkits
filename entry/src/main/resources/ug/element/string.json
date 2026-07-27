@@ -1,0 +1,151 @@
+{
+    "string":[
+        {
+            "name":"confirm",
+            "value":"جەزملەش",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"digits",
+            "value":"سان (0-9、*、#、+)",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"تور كۆرگۈچنى قوزغىتامسىز؟",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"help",
+            "value":"ياردەم",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"ئۇچۇر قوبۇللاۋاتىدۇ",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"button_no",
+            "value":"ياق",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_open_channel_msg",
+            "value":"ئۆتۈشمە يولنى ئاچامسىز؟",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"ئۆتۈشمە يول ئېتىلدى",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"چاقىرىۋاتىدۇ…",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"قويۇشنى ئەسكەرتىش",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"end_session",
+            "value":"سۆھبەتنى ئاياغلاشتۇرۇش",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"please_insert_card",
+            "value":"\u200fSIM كارتا سېلىڭ.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"button_yes",
+            "value":"شۇنداق",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"cancel",
+            "value":"بىكار قىلىش",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"يېڭى كۆچمە مۇلازىمەت ئۇچۇرى",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"alphabet",
+            "value":"ھەرپ",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"no_menu",
+            "value":"بۇ SIM كارتىنىڭ قورالدان مۇلازىمىتى يوق.",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"ئۇچۇر يوللاۋاتىدۇ",
+            "attr":{
+                "priority":"translate"
+            }
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"\u200fSIM ئەپ",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"sim_card_application",
+            "value":"\u200fSIM %s ئەپ",
+            "attr":{
+                "priority":"LT"
+            }
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"\u200feSIM %s ئەپ",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

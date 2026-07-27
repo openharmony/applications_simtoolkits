@@ -1,0 +1,120 @@
+{
+    "string":[
+        {
+            "name":"default_open_channel_msg",
+            "value":"[TS_845316]_Open channel?"
+        },
+        {
+            "name":"default_close_channel_msg",
+            "value":"[TS_845300]_Channel closed"
+        },
+        {
+            "name":"cancel",
+            "value":"[TS_845308]_Cancel"
+        },
+        {
+            "name":"no_menu",
+            "value":"[TS_845296]_SIM Toolkit is not available on this SIM card."
+        },
+        {
+            "name":"confirm",
+            "value":"[TS_845299]_OK"
+        },
+        {
+            "name":"digits",
+            "value":"[TS_845306]_Digits (0-9, *, #, +)"
+        },
+        {
+            "name":"ExtensionAbility_label",
+            "value":"[TS_845307]_label"
+        },
+        {
+            "name":"launchBrowserDefault",
+            "value":"[TS_845302]_Launch Browser?"
+        },
+        {
+            "name":"simtoolkit_StaticSubscriber",
+            "value":"[TS_845315]_StaticSubscriber"
+        },
+        {
+            "name":"help",
+            "value":"[TS_845314]_Help"
+        },
+        {
+            "name":"default_receive_data_msg",
+            "value":"[TS_845303]_Receiving data\u2026"
+        },
+        {
+            "name":"button_no",
+            "value":"[TS_845311]_No"
+        },
+        {
+            "name":"default_setup_call_msg",
+            "value":"[TS_845305]_Calling…"
+        },
+        {
+            "name":"StaticSubscriberExtensionAbility_label",
+            "value":"[TS_845319]_label"
+        },
+        {
+            "name":"StaticSubscriberExtensionAbility_desc",
+            "value":"[TS_845304]_description"
+        },
+        {
+            "name":"default_playtone_msg",
+            "value":"[TS_845321]_Playing"
+        },
+        {
+            "name":"end_session",
+            "value":"[TS_845312]_End session"
+        },
+        {
+            "name":"please_insert_card",
+            "value":"[TS_845310]_Please insert a SIM."
+        },
+        {
+            "name":"button_yes",
+            "value":"[TS_845322]_Yes"
+        },
+        {
+            "name":"ExtensionAbility_desc",
+            "value":"[TS_845323]_description"
+        },
+        {
+            "name":"new_incoming_message",
+            "value":"[TS_845320]_New mobile service message"
+        },
+        {
+            "name":"simtoolkit_MainAbility",
+            "value":"[TS_845298]_SIM Toolkit"
+        },
+        {
+            "name":"stk_channel_name",
+            "value":"[TS_845313]_Mobile service messages"
+        },
+        {
+            "name":"alphabet",
+            "value":"[TS_845318]_Alphanumeric"
+        },
+        {
+            "name":"module_desc",
+            "value":"[TS_845301]_module_desc"
+        },
+        {
+            "name":"mainability_description",
+            "value":"[TS_845309]_HwSimToolkits Ability"
+        },
+        {
+            "name":"default_send_data_msg",
+            "value":"[TS_845297]_Sending data\u2026"
+        },
+        {
+            "name":"sim_card_application",
+            "value":"[TS_915869]_SIM %s Toolkit"
+        },
+        {
+            "name":"esim_card_application_number",
+            "value":"[TS_1118468]_eSIM %s toolkit"
+        }
+    ]
+}
