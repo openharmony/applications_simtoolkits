@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"SIM 卡应用程序",
+            "attr":{
+                "priority":"translate"
+            }
+        }
+    ]
+}

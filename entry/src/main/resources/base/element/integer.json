@@ -1,0 +1,48 @@
+{
+  "integer": [
+    {
+      "name": "TONE_SUP_DIAL",
+      "value": 16
+    },
+    {
+      "name": "TONE_SUP_BUSY",
+      "value": 17
+    },
+    {
+      "name": "TONE_SUP_CONGESTION",
+      "value": 18
+    },
+    {
+      "name": "TONE_SUP_RADIO_ACK",
+      "value": 19
+    },
+    {
+      "name": "TONE_SUP_RADIO_NOTAVAIL",
+      "value": 20
+    },
+    {
+      "name": "TONE_SUP_ERROR",
+      "value": 21
+    },
+    {
+      "name": "TONE_SUP_CALL_WAITING",
+      "value": 22
+    },
+    {
+      "name": "TONE_SUP_RINGTONE",
+      "value": 23
+    },
+    {
+      "name": "TONE_PROP_BEEP",
+      "value": 24
+    },
+    {
+      "name": "TONE_PROP_ACK",
+      "value": 25
+    },
+    {
+      "name": "TONE_PROP_NACK",
+      "value": 26
+    }
+  ]
+}

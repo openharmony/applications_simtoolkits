@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"SIM 卡應用程式",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "string":[
+        {
+            "name":"app_name",
+            "value":"Toolkit SIM",
+            "attr":{
+                "priority":"LT"
+            }
+        }
+    ]
+}
