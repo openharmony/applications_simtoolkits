@@ -1,21 +1,21 @@
-# SimToolKits 
+# SIM Card Value-Added Services (SimToolKits)
 
 ## Introduction
 
-SimToolKits (bundle name: `com.ohos.simtoolkits`) is a pre-installed **SIM Toolkit (STK)** system application in the OpenHarmony telephony subsystem. It parses and handles proactive commands issued by the SIM card, presents interactive UI such as menus, text, input fields, and confirmation dialogs, and returns the user action result to the Telephony framework as a Terminal Response or Envelope.
+SimToolKits (STK, bundle name: `com.ohos.simtoolkits`) is a pre-installed **SIM card value-added services system application** in the OpenHarmony telephony subsystem. It parses and handles proactive commands issued by the SIM card, presents interactive UI such as menus, text, input fields, and confirmation dialogs, and returns the user action result to the Telephony framework as a Terminal Response or Envelope.
 
-This is a pre-installed system application. It supports single-SIM, dual-SIM, and eSIM scenarios. It usually has no desktop icon; users can open the STK main menu from entries such as **Settings → Mobile network → SIM management**.
+This is a pre-installed system application. It supports single-SIM, dual-SIM, and eSIM scenarios. It usually has no desktop icon; users can open the STK main menu from **Settings → Mobile network → SIM management → SIM applications**.
 
 ### Core Capabilities
 
-**Information Display**
+**SIM Card Info Display**
 
 - Supports displaying SIM-issued text, idle mode text, or refresh prompts
 - Supports playing notification tones, optionally with a text dialog
 - Supports BIP confirmation / prompts and response
 - Supports switching system language per SIM language notification
 
-**Information Interaction**
+**SIM Card Info Interaction**
 
 - Supports main menu / submenu display, selection and response
 - Supports single- / multi-character input and response
@@ -23,19 +23,8 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 - Supports launching the system browser after confirmation
 - Supports showing / hiding the STK entry in Settings
 
-> **Note**: This repository is the STK **application layer**. Command parsing, session dispatch, and Terminal Response encoding live in the common layer (`AppService Hub` / `upDecode Parse` / `response Encode` / `Worker`). Modem / RIL performs SMS, SS, USSD, DTMF, and similar operations.
+> **Note**: This repository is the STK **application layer**. Command parsing, session dispatch, and Terminal Response encoding live in the common layer (`AppService Hub` / `upDecode Parsing` / `response Encoding` / `Worker`). Modem / RIL performs SMS, SS, USSD, DTMF, and similar operations.
 
-Event and call relationships:
-
-1. After receiving a SIM proactive command, the Telephony framework starts this app's `ServiceExtAbility` via `startServiceExtensionAbility`, with `COMMON_EVENT_STK_*` action and parameters such as `msgCmd` and `slotId`.
-2. After common-layer decoding and dispatch, the flow enters the matching feature: `Menu Mgmt` / `Text Display` / `Input UI` / `Call Confirm`, and so on.
-3. After user interaction, the app returns Terminal Response / Envelope through TelephonyKit APIs; `Settings Entry` is coordinated with `com.ohos.settings` and `com.ohos.simcardmanagement`.
-
-Example of a typical `SELECT_ITEM` (Menu Mgmt) flow:
-
-- Telephony delivers the command HEX to `ServiceExtAbility`;
-- `AppService Hub` decodes it via Worker / upDecode and starts `EntryAbility` to show the menu;
-- After the user selects an item, response encoding returns the result via `sim.sendTerminalResponseCmd`.
 
 ## Architecture
 
@@ -50,23 +39,61 @@ The overall design can be divided into a product layer, a feature layer, and a c
 
 | Layer | Main directories / components | Description |
 | ----- | ------------------------- | ----------- |
-| Product | `application/`, `entryability/`, `ServiceExtAbility/` | AbilityStage, UIAbility, and ServiceExtensionAbility lifecycle and event ingress; phone and pad form factors |
-| Feature | `pages/`, related Param / Helper classes | Information Display (Text Display, Play Tone, BIP Prompt, Lang Notify); Information Interaction (Menu Mgmt, Input UI, Call Confirm, Launch Browser, Settings Entry) |
-| Common | `model/upDecode/`, `model/responseData/`, `common/`, `workers/` | upDecode Parse, response Encode, AppService Hub, Worker, EntranceHelper, Notification, Timeout/Keepalive |
+| Product | `product` | Supports phone and pad form factors |
+| Feature | `pages/`, related Param / Helper classes | SIM Card Info Display; SIM Card Info Interaction |
+| Common | `model/upDecode/`, `model/responseData/`, `common/`, `workers/` | upDecode Parsing, response Encoding, AppService Hub, Worker, EntranceHelper, Notification Tool, Timeout Keep-alive |
 
 Feature-layer modules:
 
-| Core capability | Modules | Description |
-| --------------- | ------- | ----------- |
-| Menu Mgmt | Index, SetUpMenuParam, SelectItemParam (pages / upDecode) | Main-menu cache, submenu selection and response |
-| Text Display | DisplayAndIdleTextHelper, NotificationUtils (helper / utils) | Dialog / Toast / notification, idle text |
-| Input UI | SimToolKitInput, GetInkeyInputParam (pages / upDecode) | Single- / multi-character input and response |
-| Call Confirm | LauncherDialog, SetUpCallParam (pages / upDecode) | Call-setup confirm, accept / reject |
-| Launch Browser | LauncherDialog, LaunchBrowserParam (pages / upDecode) | Launch system browser after confirm |
-| Play Tone | ToneDialog, TonePlayer, PlayToneParam (components / utils / upDecode) | Tone playback, optional text dialog |
-| BIP Prompt | LauncherDialog, AllBipParam (pages / upDecode) | BIP confirm / prompt and response |
-| Lang Notify | LanguageNotificationHelper, LanguageNotificationParam (upDecode) | Switch system language per SIM |
-| Settings Entry | EntranceHelper, SettingsDataHelper (helper) | Show / hide STK entry in Settings search |
+<table>
+  <thead>
+    <tr>
+      <th>Core capability</th>
+      <th>Modules</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="4">SIM Card Info Display</td>
+      <td>DisplayAndIdleTextHelper, NotificationUtils (helper / utils)</td>
+      <td>Dialog / Toast / notification, idle text</td>
+    </tr>
+    <tr>
+      <td>ToneDialog, TonePlayer, PlayToneParam (components / utils / upDecode)</td>
+      <td>Tone playback, optional text dialog</td>
+    </tr>
+    <tr>
+      <td>LauncherDialog, AllBipParam (pages / upDecode)</td>
+      <td>BIP confirm / prompt and response</td>
+    </tr>
+    <tr>
+      <td>LanguageNotificationHelper, LanguageNotificationParam (upDecode)</td>
+      <td>Switch system language per SIM</td>
+    </tr>
+    <tr>
+      <td rowspan="5">SIM Card Info Interaction</td>
+      <td>Index, SetUpMenuParam, SelectItemParam (pages / upDecode)</td>
+      <td>Main-menu cache, submenu selection and response</td>
+    </tr>
+    <tr>
+      <td>SimToolKitInput, GetInkeyInputParam (pages / upDecode)</td>
+      <td>Single- / multi-character input and response</td>
+    </tr>
+    <tr>
+      <td>LauncherDialog, SetUpCallParam (pages / upDecode)</td>
+      <td>Call-setup confirm, accept / reject</td>
+    </tr>
+    <tr>
+      <td>LauncherDialog, LaunchBrowserParam (pages / upDecode)</td>
+      <td>Launch system browser after confirm</td>
+    </tr>
+    <tr>
+      <td>EntranceHelper, SettingsDataHelper (helper)</td>
+      <td>Show / hide STK entry in Settings search</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Relationship with Other Applications
 
@@ -76,7 +103,7 @@ Feature-layer modules:
 | Who can call it? | Primarily the Telephony framework starts `ServiceExtAbility` to deliver STK events; Settings / SIM management can launch the main menu with a `slotId` |
 | When can it be called? | After the pre-installed app is available; actual STK work depends on proactive commands from the SIM |
 | Supported Want parameters | `action` (`COMMON_EVENT_STK_*`), `msgCmd`, `slotId`, `pageUrl`, and so on (see `ServiceExtAbility` / `EntryAbility`) |
-| Cross-process collaboration | Returns command results via TelephonyKit APIs; coordinates `Settings Entry` and dual-SIM launch with `com.ohos.settings` and `com.ohos.simcardmanagement` through Settings / RPC |
+| Cross-process collaboration | Returns command results via TelephonyKit APIs; coordinates Settings entry and dual-SIM launch with `com.ohos.settings` and `com.ohos.simcardmanagement` through Settings / RPC |
 
 ## Build
 
@@ -103,15 +130,13 @@ SimToolKits is developed in ArkTS, with UI based on the ArkUI Stage model. The a
 
 ### Developing on Existing Modules
 
-Typical scenarios: customize existing capabilities, such as trimming or adjusting STK command handling, changing UI interaction, or updating Settings Entry logic.
+Typical scenarios: customize existing capabilities, such as trimming or adjusting STK command handling, changing UI interaction, or updating Settings entry logic.
 
 Modifying or trimming existing modules
 
-Locate the change by business boundary: `model/` (dispatch and codec), `pages/` (UI), `common/helper/` (entry / timeout / idle screen), or `workers/` (async parsing).
+Scenario 1: Modify the command parsing path
 
-Modify the command parsing path:
-
-For example, to adjust Param creation for a command type, change the corresponding branch in `UpDecodeFactory`:
+To adjust Param creation for a command type, change the corresponding branch in `UpDecodeFactory`:
 
 ```typescript
 // model/upDecode/UpDecodeFactory.ets — create Param by commandType
@@ -128,9 +153,9 @@ private createUpParams(commandType: number): BaseUpParams | undefined {
 }
 ```
 
-Modify the command dispatch path:
+Scenario 2: Modify the command dispatch path
 
-For example, to adjust how `SELECT_ITEM` / input commands are started, extend `SimToolKitAppService`:
+To adjust how `SELECT_ITEM` / input commands are started, extend `SimToolKitAppService`:
 
 ```typescript
 // model/SimToolKitAppService.ets — handleUpParamData
@@ -149,9 +174,9 @@ switch (upParams.commandType) {
 }
 ```
 
-Modify Settings Entry:
+Scenario 3: Modify Settings entry
 
-For example, to adjust entry refresh after `SET_UP_MENU`, change `EntranceHelper`:
+To adjust entry refresh after `SET_UP_MENU`, change `EntranceHelper`:
 
 ```typescript
 // common/helper/EntranceHelper.ets — refresh Settings entry after SET_UP_MENU
@@ -171,9 +196,9 @@ public async checkIsHaveMainMenu(
 }
 ```
 
-Modify UI components:
+Scenario 4: Modify UI components
 
-For example, to customize the main menu list, edit `pages/Index.ets`:
+To customize the main menu list, edit `pages/Index.ets`:
 
 ```typescript
 // pages/Index.ets — main menu / SELECT_ITEM list
@@ -196,16 +221,6 @@ List() {
 }
 ```
 
-1. - Command types: `entry/src/main/ets/common/constant/SimToolKitConstant.ts`
-   - Param classes: `entry/src/main/ets/model/upDecode/`, created by `UpDecodeFactory`
-   - Dispatch / session: `SimToolKitAppService`; response encoding: `model/responseData/`
-2. - Menu page: `entry/src/main/ets/pages/Index.ets`
-   - Input page: `entry/src/main/ets/pages/SimToolKitInput.ets`
-   - Dialog page: `entry/src/main/ets/pages/LauncherDialog.ets`
-3. - Settings Entry: `entry/src/main/ets/common/helper/EntranceHelper.ets`
-   - Idle text / notification: `DisplayAndIdleTextHelper`, `NotificationUtils`
-4. - Shared dialogs, navigation, and so on: `entry/src/main/ets/common/components/`
-
 Common modification entry points:
 
 | Target | Path |
@@ -214,7 +229,7 @@ Common modification entry points:
 | GET_INKEY / GET_INPUT | `entry/src/main/ets/pages/SimToolKitInput.ets` |
 | Confirm / Toast / tone | `entry/src/main/ets/pages/LauncherDialog.ets`, `common/components/` |
 | Command hub | `entry/src/main/ets/model/SimToolKitAppService.ets` |
-| Settings Entry | `entry/src/main/ets/common/helper/EntranceHelper.ets` |
+| Settings entry | `entry/src/main/ets/common/helper/EntranceHelper.ets` |
 | Shared dialogs / navigation | `entry/src/main/ets/common/components/` |
 
 ### Developing New Feature Capabilities
@@ -223,9 +238,9 @@ Typical scenarios: add support for a new proactive command, extend interaction f
 
 Note: This project is a single `entry` HAP (`com.ohos.simtoolkits`). Product, feature, and common code live in the same module under different directories. New capabilities usually extend the existing layout; if product-form HAPs are split later, add the corresponding directories and register them in `build-profile.json5`.
 
-Step 1: Extend business capabilities (most common)
+Step 1: Extend business capabilities
 
-1. Add the command type to `CommandType` in `SimToolKitConstant.ts` (skip if it already exists).
+1. Add the command type to `CommandType` in `SimToolKitConstant.ts`.
 2. Add or extend the Param class under `model/upDecode/` and register it in `UpDecodeFactory`.
 3. Add a dispatch branch in `SimToolKitAppService` (launch UI or auto-respond).
 4. If a dedicated result is required, add Response / Envelope encoding under `model/responseData/`.
@@ -285,22 +300,22 @@ simtoolkits
 │  └─resources/                         # Global strings / icons
 ├─docs
 │  └─figures/                           # Architecture diagrams
-├─entry                                 # Single HAP module (product / feature / common)
+├─entry                                 # Single HAP module
 │  └─src/main/
 │     ├─ets/
-│     │  ├─application/                 # AbilityStage
-│     │  ├─entryability/                # EntryAbility (UI entry)
-│     │  ├─ServiceExtAbility/           # ServiceExtensionAbility (event entry)
-│     │  ├─pages/                       # Index / Input / LauncherDialog
+│     │  ├─application/                 # Global manager: app-level lifecycle and global init
+│     │  ├─entryability/                # Entry Ability: launch main menu / input UI
+│     │  ├─ServiceExtAbility/           # Extension service: receive STK events from the telephony subsystem and dispatch
+│     │  ├─pages/                       # UI pages: Index main menu, SimToolKitInput, confirm dialogs / popups, etc.
 │     │  ├─model/                       # Business hub, TLV parse, response encode
-│     │  │  ├─upDecode/                 # Proactive command parsing
-│     │  │  └─responseData/             # Terminal Response / Envelope
+│     │  │  ├─upDecode/                 # Proactive command parsing: set up menu, display text, etc.
+│     │  │  └─responseData/             # Response data: Terminal Response / Envelope encoding
 │     │  ├─common/
 │     │  │  ├─components/               # Shared UI components
 │     │  │  ├─constant/                 # Command types, TLV tags, response codes, page routes, timeouts, etc.
 │     │  │  ├─helper/                   # Entry, timeout, idle-screen helpers
 │     │  │  └─utils/                    # Notification, codec, cache, reporting
-│     │  └─workers/                     # Async Worker parsing
+│     │  └─workers/                     # Async parsing for long-running tasks
 │     ├─resources/                      # Module resources and localization
 │     └─module.json5                    # Ability and permission declarations
 ├─hvigor                                # Build tool config
@@ -319,26 +334,24 @@ Language: ArkTS
 
 Runtime form: pre-installed system application (`com.ohos.simtoolkits`), depending on TelephonyKit, notification, floating window, background task, and related system capabilities
 
-Device types: `default`, `tablet` (see `entry/src/main/module.json5`)
+Device types: `phone`, `tablet` (see `entry/src/main/module.json5`)
 
 Permissions: main permissions required by SimToolKits (see `entry/src/main/module.json5`)
 
 | Permission | Grant mode | Usage |
 | ---------- | ---------- | ----- |
-| ohos.permission.SET_TELEPHONY_STATE | system | Return Terminal Response / Envelope; call-setup confirmation |
-| ohos.permission.GET_TELEPHONY_STATE | system | Query SIM / call-related state |
-| ohos.permission.KEEP_BACKGROUND_RUNNING | system | Keep background continuous task during STK sessions |
-| ohos.permission.START_ABILITIES_FROM_BACKGROUND | system | Start menu / input / dialog Ability from background |
-| ohos.permission.SYSTEM_FLOAT_WINDOW | system | Create floating windows / dialogs for STK UI |
-| ohos.permission.ACCESS_NOTIFICATION_POLICY | system | Idle mode text, REFRESH, and related notifications |
-| ohos.permission.MANAGE_SETTINGS / ACCESS_SYSTEM_SETTINGS | system | Read/write Settings; control Settings Entry show/hide |
-| ohos.permission.UPDATE_CONFIGURATION | system | Language notification and configuration changes |
-| ohos.permission.VIBRATE | system | Vibration for PLAY_TONE and similar cases |
-| ohos.permission.PRIVACY_WINDOW | system | Privacy window for sensitive input |
+| ohos.permission.SET_TELEPHONY_STATE | system grant | Return Terminal Response / Envelope; call-setup confirmation |
+| ohos.permission.GET_TELEPHONY_STATE | system grant | Query SIM / call-related state |
+| ohos.permission.KEEP_BACKGROUND_RUNNING | system grant | Keep background continuous task during STK sessions |
+| ohos.permission.START_ABILITIES_FROM_BACKGROUND | system grant | Start menu / input / dialog Ability from background |
+| ohos.permission.SYSTEM_FLOAT_WINDOW | system grant | Create floating windows / dialogs for STK UI |
+| ohos.permission.ACCESS_NOTIFICATION_POLICY | system grant | Idle mode text, REFRESH, and related notifications |
+| ohos.permission.MANAGE_SETTINGS / ACCESS_SYSTEM_SETTINGS | system grant | Read/write Settings; control Settings entry show/hide |
+| ohos.permission.UPDATE_CONFIGURATION | system grant | Language notification and configuration changes |
+| ohos.permission.VIBRATE | system grant | Vibration for PLAY_TONE and similar cases |
+| ohos.permission.PRIVACY_WINDOW | system grant | Privacy window for sensitive input |
 
 Supported proactive commands: `SET_UP_MENU`, `SELECT_ITEM`, `DISPLAY_TEXT`, `GET_INKEY`, `GET_INPUT`, `SET_UP_IDLE_MODE_TEXT`, `PROVIDE_LOCAL_INFORMATION`, `SET_UP_CALL`, `LAUNCH_BROWSER`, `PLAY_TONE`, `SET_UP_EVENT_LIST`, `LANGUAGE_NOTIFICATION`, BIP-related commands, and so on (for some commands the app only shows Alpha ID prompts; execution is in RIL)
-
-Form-factor notes: phone and tablet are both declared in `deviceTypes`; dual-SIM is isolated by `slotId` (0 / 1); eSIM combinations depend on system parameters; for secondary users (`localId ≠ 100`), commands other than `SET_UP_MENU` are rejected under the current policy
 
 ## Contributing
 
@@ -346,5 +359,5 @@ Contributions of code, documentation, and more are welcome. See [Contributing](h
 
 ## Related Repositories
 
-- [applications_simcardmanagement](https://gitcode.com/openharmony-sig/applications_simcardmanagement)（Simcardmanagement App）
-- [applications_settings](https://gitcode.com/openharmony/applications_settings)（System Settings and Related External Pages）
+- [applications_simcardmanagement](https://gitcode.com/openharmony-sig/applications_simcardmanagement) (SIM card management app)
+- [applications_settings](https://gitcode.com/openharmony/applications_settings) (system Settings and related external pages)
