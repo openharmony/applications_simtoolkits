@@ -45,17 +45,55 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 特性层模块说明：
 
-| 核心能力 | 模块 | 说明 |
-| -------- | ---- | ---- |
-| 菜单管理 | Index、SetUpMenuParam、SelectItemParam（pages / upDecode） | 主菜单缓存、子菜单选择与回传 |
-| 文本展示 | DisplayAndIdleTextHelper、NotificationUtils（helper / utils） | 弹窗 / Toast / 通知展示、空闲文本 |
-| 输入交互 | SimToolKitInput、GetInkeyInputParam（pages / upDecode） | 单字符 / 多字符输入与回传 |
-| 呼叫确认 | LauncherDialog、SetUpCallParam（pages / upDecode） | 呼叫建立确认、接受 / 拒绝 |
-| 浏览器启动 | LauncherDialog、LaunchBrowserParam（pages / upDecode） | 确认后拉起系统浏览器 |
-| 音调播放 | ToneDialog、TonePlayer、PlayToneParam（components / utils / upDecode） | 提示音播放、可选文本弹窗 |
-| BIP提示 | LauncherDialog、AllBipParam（pages / upDecode） | BIP 确认 / 提示与回传 |
-| 语言通知 | LanguageNotificationHelper、LanguageNotificationParam（upDecode） | 按 SIM 切换系统语言 |
-| 设置入口 | EntranceHelper、SettingsDataHelper（helper） | 设置搜索项中 STK 入口显隐 |
+<table>
+  <thead>
+    <tr>
+      <th>核心能力</th>
+      <th>模块</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="4">SIM卡信息展示</td>
+      <td>DisplayAndIdleTextHelper、NotificationUtils（helper / utils）</td>
+      <td>弹窗 / Toast / 通知展示、空闲文本</td>
+    </tr>
+    <tr>
+      <td>ToneDialog、TonePlayer、PlayToneParam（components / utils / upDecode）</td>
+      <td>提示音播放、可选文本弹窗</td>
+    </tr>
+    <tr>
+      <td>LauncherDialog、AllBipParam（pages / upDecode）</td>
+      <td>BIP 确认 / 提示与回传</td>
+    </tr>
+    <tr>
+      <td>LanguageNotificationHelper、LanguageNotificationParam（upDecode）</td>
+      <td>按 SIM 切换系统语言</td>
+    </tr>
+    <tr>
+      <td rowspan="5">SIM卡信息交互</td>
+      <td>Index、SetUpMenuParam、SelectItemParam（pages / upDecode）</td>
+      <td>主菜单缓存、子菜单选择与回传</td>
+    </tr>
+    <tr>
+      <td>SimToolKitInput、GetInkeyInputParam（pages / upDecode）</td>
+      <td>单字符 / 多字符输入与回传</td>
+    </tr>
+    <tr>
+      <td>LauncherDialog、SetUpCallParam（pages / upDecode）</td>
+      <td>呼叫建立确认、接受 / 拒绝</td>
+    </tr>
+    <tr>
+      <td>LauncherDialog、LaunchBrowserParam（pages / upDecode）</td>
+      <td>确认后拉起系统浏览器</td>
+    </tr>
+    <tr>
+      <td>EntranceHelper、SettingsDataHelper（helper）</td>
+      <td>设置搜索项中 STK 入口显隐</td>
+    </tr>
+  </tbody>
+</table>
 
 ### 与其它应用的关系
 
@@ -265,13 +303,13 @@ simtoolkits
 ├─entry                                 # 唯一 HAP 模块
 │  └─src/main/
 │     ├─ets/
-│     │  ├─application/                 # AbilityStage
-│     │  ├─entryability/                # EntryAbility
-│     │  ├─ServiceExtAbility/           # ServiceExtensionAbility
-│     │  ├─pages/                       # Index / Input / LauncherDialog
+│     │  ├─application/                 # 全局管理器：应用级生命周期与全局初始化
+│     │  ├─entryability/                # 入口能力：拉起主菜单 / 输入页等 UI
+│     │  ├─ServiceExtAbility/           # 扩展服务：接收电话子系统下发的 STK 事件并分发
+│     │  ├─pages/                       # UI 页面：Index主菜单、SimToolKitInput 输入、确认框 /弹窗等
 │     │  ├─model/                       # 业务中枢、TLV 解析、响应编码
-│     │  │  ├─upDecode/                 # 主动式命令解析
-│     │  │  └─responseData/             # Terminal Response / Envelope
+│     │  │  ├─upDecode/                 # 主动式命令解析：建立菜单、展示文本等
+│     │  │  └─responseData/             # 响应数据：终端响应 / Envelope 编码
 │     │  ├─common/
 │     │  │  ├─components/               # 通用 UI 组件
 │     │  │  ├─constant/                 # 命令类型、TLV 标签、响应码、页面路由、超时等常量
