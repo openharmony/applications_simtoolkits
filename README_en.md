@@ -174,7 +174,7 @@ switch (upParams.commandType) {
 }
 ```
 
-Scenario 3: Modify Settings entry
+**Scenario 3: Modify Settings entry**
 
 To adjust entry refresh after `SET_UP_MENU`, change `EntranceHelper`:
 
@@ -196,7 +196,7 @@ public async checkIsHaveMainMenu(
 }
 ```
 
-Scenario 4: Modify UI components
+**Scenario 4: Modify UI components**
 
 To customize the main menu list, edit `pages/Index.ets`:
 
@@ -238,7 +238,7 @@ Typical scenarios: add support for a new proactive command, extend interaction f
 
 Note: This project is a single `entry` HAP (`com.ohos.simtoolkits`). Product, feature, and common code live in the same module under different directories. New capabilities usually extend the existing layout; if product-form HAPs are split later, add the corresponding directories and register them in `build-profile.json5`.
 
-Step 1: Extend business capabilities
+**Step 1: Extend business capabilities**
 
 1. Add the command type to `CommandType` in `SimToolKitConstant.ts`.
 2. Add or extend the Param class under `model/upDecode/` and register it in `UpDecodeFactory`.
@@ -246,7 +246,7 @@ Step 1: Extend business capabilities
 4. If a dedicated result is required, add Response / Envelope encoding under `model/responseData/`.
 5. Add unit tests aligned with 3GPP TS 27.22 under `entry/src/ohosTest`, and register them in the test entry.
 
-Step 2: Configure / confirm Ability entry points
+**Step 2: Configure / confirm Ability entry points**
 
 Entries are already declared in `entry/src/main/module.json5`. When extending capabilities, usually confirm that permissions and Ability configuration cover the new scenario:
 
@@ -281,7 +281,7 @@ Entries are already declared in `entry/src/main/module.json5`. When extending ca
 }
 ```
 
-Step 3: Customize UI
+**Step 3: Customize UI**
 
 After business logic and Ability configuration are ready, extend the menu, input, or dialog pages using the UI modification approach in the previous section.
 
