@@ -23,7 +23,7 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 - Supports launching the system browser after confirmation
 - Supports showing / hiding the STK entry in Settings
 
-> **Note**: This repository is the STK **application layer**. Command parsing, session dispatch, and Terminal Response encoding live in the common layer (`AppService Hub` / `upDecode Parsing` / `response Encoding` / `Worker`). Modem / RIL performs SMS, SS, USSD, DTMF, and similar operations.
+> **Note**: This repository is the STK **application layer**. Command parsing, session dispatch, and Terminal Response encoding live in the common layer (`AppService Hub` / `UpDecode Parsing` / `response Encoding` / `Worker`). Modem / RIL performs SMS, SS, USSD, DTMF, and similar operations.
 
 
 ## Architecture
@@ -39,9 +39,9 @@ The overall design can be divided into a product layer, a feature layer, and a c
 
 | Layer | Main directories / components | Description |
 | ----- | ------------------------- | ----------- |
-| Product | `product` | Supports phone and pad form factors |
-| Feature | `pages/`, related Param / Helper classes | SIM Card Info Display; SIM Card Info Interaction |
-| Common | `model/upDecode/`, `model/responseData/`, `common/`, `workers/` | upDecode Parsing, response Encoding, AppService Hub, Worker, EntranceHelper, Notification Tool, Timeout Keep-alive |
+| Product | phone / pad | Supports phone and tablet form factors |
+| Feature | `pages`, `model/upDecode` | SIM Card Info Display, SIM Card Info Interaction |
+| Common | `model/upDecode`, `model/responseData`, `model` (SimToolKitAppService), `workers`, `common/helper` (EntranceHelper), `common/utils` (NotificationUtils), `common/helper` (CustTimeOutHelper) | UpDecode Parsing, response Encoding, AppService Hub, Worker, EntranceHelper, Notification Tool, Timeout Keep-alive |
 
 Feature-layer modules:
 
@@ -49,60 +49,60 @@ Feature-layer modules:
   <thead>
     <tr>
       <th>Core capability</th>
-      <th>Modules</th>
+      <th>Module and key classes</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td rowspan="4">SIM Card Info Display</td>
-      <td>DisplayAndIdleTextHelper, NotificationUtils (helper / utils)</td>
-      <td>Dialog / Toast / notification, idle text</td>
+      <td><code>model/upDecode</code> (DisplayTextParam, SetUpIdleModeTextParam)</td>
+      <td>Supports displaying SIM-issued text, idle mode text, or refresh prompts</td>
     </tr>
     <tr>
-      <td>ToneDialog, TonePlayer, PlayToneParam (components / utils / upDecode)</td>
-      <td>Tone playback, optional text dialog</td>
+      <td><code>model/upDecode</code> (PlayToneParam)</td>
+      <td>Supports playing notification tones, optionally with a text dialog</td>
     </tr>
     <tr>
-      <td>LauncherDialog, AllBipParam (pages / upDecode)</td>
-      <td>BIP confirm / prompt and response</td>
+      <td><code>pages</code> (LauncherDialog), <code>model/upDecode</code> (AllBipParam)</td>
+      <td>Supports BIP confirmation / prompts and response</td>
     </tr>
     <tr>
-      <td>LanguageNotificationHelper, LanguageNotificationParam (upDecode)</td>
-      <td>Switch system language per SIM</td>
+      <td><code>model/upDecode</code> (LanguageNotificationHelper, LanguageNotificationParam)</td>
+      <td>Supports switching system language per SIM language notification</td>
     </tr>
     <tr>
       <td rowspan="5">SIM Card Info Interaction</td>
-      <td>Index, SetUpMenuParam, SelectItemParam (pages / upDecode)</td>
-      <td>Main-menu cache, submenu selection and response</td>
+      <td><code>pages</code> (Index), <code>model/upDecode</code> (SetUpMenuParam, SelectItemParam)</td>
+      <td>Supports main menu / submenu display, selection and response</td>
     </tr>
     <tr>
-      <td>SimToolKitInput, GetInkeyInputParam (pages / upDecode)</td>
-      <td>Single- / multi-character input and response</td>
+      <td><code>pages</code> (SimToolKitInput), <code>model/upDecode</code> (GetInkeyInputParam)</td>
+      <td>Supports single- / multi-character input and response</td>
     </tr>
     <tr>
-      <td>LauncherDialog, SetUpCallParam (pages / upDecode)</td>
-      <td>Call-setup confirm, accept / reject</td>
+      <td><code>pages</code> (LauncherDialog), <code>model/upDecode</code> (SetUpCallParam)</td>
+      <td>Supports call-setup confirmation (accept / reject)</td>
     </tr>
     <tr>
-      <td>LauncherDialog, LaunchBrowserParam (pages / upDecode)</td>
-      <td>Launch system browser after confirm</td>
+      <td><code>pages</code> (LauncherDialog), <code>model/upDecode</code> (LaunchBrowserParam)</td>
+      <td>Supports launching the system browser after confirmation</td>
     </tr>
     <tr>
-      <td>EntranceHelper, SettingsDataHelper (helper)</td>
-      <td>Show / hide STK entry in Settings search</td>
+      <td><code>common/helper</code> (EntranceHelper, SettingsDataHelper)</td>
+      <td>Supports showing / hiding the STK entry in Settings</td>
     </tr>
   </tbody>
 </table>
 
 ### Relationship with Other Applications
 
-| Item | Description |
-| ---- | ----------- |
-| Can other apps call it? | Yes. `EntryAbility` / `ServiceExtAbility` declare `exported=true`; Telephony and other system components can start them via Want |
-| Who can call it? | Primarily the Telephony framework starts `ServiceExtAbility` to deliver STK events; Settings / SIM management can launch the main menu with a `slotId` |
-| When can it be called? | After the pre-installed app is available; actual STK work depends on proactive commands from the SIM |
-| Supported Want parameters | `action` (`COMMON_EVENT_STK_*`), `msgCmd`, `slotId`, `pageUrl`, and so on (see `ServiceExtAbility` / `EntryAbility`) |
+| Item                        | Description |
+|-----------------------------| ----------- |
+| Can other apps launch it?   | Yes. `EntryAbility` / `ServiceExtAbility` declare `exported=true`; Telephony and other system components can start them via Want |
+| Who can launch it?          | Primarily the Telephony framework starts `ServiceExtAbility` to deliver STK events; Settings / SIM management can launch the main menu with a `slotId` |
+| When can it be launched?    | After the pre-installed app is available; actual STK work depends on proactive commands from the SIM |
+| Supported Want parameters   | `action` (`COMMON_EVENT_STK_*`), `msgCmd`, `slotId`, `pageUrl`, and so on (see `ServiceExtAbility` / `EntryAbility`) |
 | Cross-process collaboration | Returns command results via TelephonyKit APIs; coordinates Settings entry and dual-SIM launch with `com.ohos.settings` and `com.ohos.simcardmanagement` through Settings / RPC |
 
 ## Build
@@ -111,7 +111,7 @@ Source code is organized as product / feature / common layers inside a single `e
 
 ### Environment Requirements
 
-- OpenHarmony SDK (`compileSdkVersion` 23; `compatibleSdkVersion` / `targetSdkVersion` 20 in this project)
+- OpenHarmony SDK: compileSdkVersion 26, compatibleSdkVersion 23
 - DevEco Studio or the Hvigor command-line toolchain
 - System signing certificates (see `signature/`)
 
@@ -134,7 +134,7 @@ Typical scenarios: customize existing capabilities, such as trimming or adjustin
 
 Modifying or trimming existing modules
 
-Scenario 1: Modify the command parsing path
+**Scenario 1: Modify the command parsing path**
 
 To adjust Param creation for a command type, change the corresponding branch in `UpDecodeFactory`:
 
@@ -153,7 +153,7 @@ private createUpParams(commandType: number): BaseUpParams | undefined {
 }
 ```
 
-Scenario 2: Modify the command dispatch path
+**Scenario 2: Modify the command dispatch path**
 
 To adjust how `SELECT_ITEM` / input commands are started, extend `SimToolKitAppService`:
 
@@ -174,7 +174,7 @@ switch (upParams.commandType) {
 }
 ```
 
-Scenario 3: Modify Settings entry
+**Scenario 3: Modify Settings entry**
 
 To adjust entry refresh after `SET_UP_MENU`, change `EntranceHelper`:
 
@@ -196,7 +196,7 @@ public async checkIsHaveMainMenu(
 }
 ```
 
-Scenario 4: Modify UI components
+**Scenario 4: Modify UI components**
 
 To customize the main menu list, edit `pages/Index.ets`:
 
@@ -238,7 +238,7 @@ Typical scenarios: add support for a new proactive command, extend interaction f
 
 Note: This project is a single `entry` HAP (`com.ohos.simtoolkits`). Product, feature, and common code live in the same module under different directories. New capabilities usually extend the existing layout; if product-form HAPs are split later, add the corresponding directories and register them in `build-profile.json5`.
 
-Step 1: Extend business capabilities
+**Step 1: Extend business capabilities**
 
 1. Add the command type to `CommandType` in `SimToolKitConstant.ts`.
 2. Add or extend the Param class under `model/upDecode/` and register it in `UpDecodeFactory`.
@@ -246,7 +246,7 @@ Step 1: Extend business capabilities
 4. If a dedicated result is required, add Response / Envelope encoding under `model/responseData/`.
 5. Add unit tests aligned with 3GPP TS 27.22 under `entry/src/ohosTest`, and register them in the test entry.
 
-Step 2: Configure / confirm Ability entry points
+**Step 2: Configure / confirm Ability entry points**
 
 Entries are already declared in `entry/src/main/module.json5`. When extending capabilities, usually confirm that permissions and Ability configuration cover the new scenario:
 
@@ -281,7 +281,7 @@ Entries are already declared in `entry/src/main/module.json5`. When extending ca
 }
 ```
 
-Step 3: Customize UI
+**Step 3: Customize UI**
 
 After business logic and Ability configuration are ready, extend the menu, input, or dialog pages using the UI modification approach in the previous section.
 
@@ -320,7 +320,7 @@ simtoolkits
 │     └─module.json5                    # Ability and permission declarations
 ├─hvigor                                # Build tool config
 ├─signature                             # Signing certificates and profiles
-├─build-profile.json5                   # Project SDK / signing / product config
+├─build-profile.json5                   # Project config / signing / product config
 ├─oh-package.json5
 ├─OAT.xml                               # Open-source compliance audit
 ├─LICENSE

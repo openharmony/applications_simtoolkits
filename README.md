@@ -37,11 +37,11 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 整体可划分为产品层、特性层、公共层：
 
-| 层次 | 主要目录 / 组件                                                    | 说明                                                                       |
-| ---- |--------------------------------------------------------------|--------------------------------------------------------------------------|
-| 产品层 | `product`               | 支持 phone、pad 形态 |
-| 特性层 | `pages/`、相关 Param / Helper                                   | SIM卡信息展示；SIM卡信息交互                             |
-| 公共层 | `model/upDecode/`、`model/responseData/`、`common/`、`workers/` | upDecode解析、response编码、AppService中枢、Worker、EntranceHelper、通知工具、超时保活       |
+| 层次 | 主要目录 / 组件 | 说明 |
+| ---- | -------------- | ---- |
+| 产品层 | phone / pad | 支持手机、平板形态 |
+| 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互 |
+| 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode解析、response编码、AppService中枢、Worker、EntranceHelper、通知工具、超时保活 |
 
 特性层模块说明：
 
@@ -49,48 +49,48 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
   <thead>
     <tr>
       <th>核心能力</th>
-      <th>模块</th>
+      <th>模块与关键类</th>
       <th>说明</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td rowspan="4">SIM卡信息展示</td>
-      <td>DisplayAndIdleTextHelper、NotificationUtils（helper / utils）</td>
-      <td>弹窗 / Toast / 通知展示、空闲文本</td>
+      <td><code>model/upDecode</code>（DisplayTextParam、SetUpIdleModeTextParam）</td>
+      <td>支持展示 SIM 下发文本、空闲模式文本或刷新提示</td>
     </tr>
     <tr>
-      <td>ToneDialog、TonePlayer、PlayToneParam（components / utils / upDecode）</td>
-      <td>提示音播放、可选文本弹窗</td>
+      <td><code>model/upDecode</code>（PlayToneParam）</td>
+      <td>支持播放提示音，并可选伴随文本弹窗</td>
     </tr>
     <tr>
-      <td>LauncherDialog、AllBipParam（pages / upDecode）</td>
-      <td>BIP 确认 / 提示与回传</td>
+      <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（AllBipParam）</td>
+      <td>支持 BIP 确认 / 提示与回传</td>
     </tr>
     <tr>
-      <td>LanguageNotificationHelper、LanguageNotificationParam（upDecode）</td>
-      <td>按 SIM 切换系统语言</td>
+      <td><code>model/upDecode</code>（LanguageNotificationHelper、LanguageNotificationParam）</td>
+      <td>支持按 SIM 下发语言通知切换系统语言</td>
     </tr>
     <tr>
       <td rowspan="5">SIM卡信息交互</td>
-      <td>Index、SetUpMenuParam、SelectItemParam（pages / upDecode）</td>
-      <td>主菜单缓存、子菜单选择与回传</td>
+      <td><code>pages</code>（Index）、<code>model/upDecode</code>（SetUpMenuParam、SelectItemParam）</td>
+      <td>支持主菜单与子菜单的展示、选择与回传</td>
     </tr>
     <tr>
-      <td>SimToolKitInput、GetInkeyInputParam（pages / upDecode）</td>
-      <td>单字符 / 多字符输入与回传</td>
+      <td><code>pages</code>（SimToolKitInput）、<code>model/upDecode</code>（GetInkeyInputParam）</td>
+      <td>支持单字符 / 多字符输入与回传</td>
     </tr>
     <tr>
-      <td>LauncherDialog、SetUpCallParam（pages / upDecode）</td>
-      <td>呼叫建立确认、接受 / 拒绝</td>
+      <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（SetUpCallParam）</td>
+      <td>支持呼叫建立确认（接受 / 拒绝）</td>
     </tr>
     <tr>
-      <td>LauncherDialog、LaunchBrowserParam（pages / upDecode）</td>
-      <td>确认后拉起系统浏览器</td>
+      <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（LaunchBrowserParam）</td>
+      <td>支持确认后拉起系统浏览器</td>
     </tr>
     <tr>
-      <td>EntranceHelper、SettingsDataHelper（helper）</td>
-      <td>设置搜索项中 STK 入口显隐</td>
+      <td><code>common/helper</code>（EntranceHelper、SettingsDataHelper）</td>
+      <td>支持在设置中显隐 STK 应用程序入口</td>
     </tr>
   </tbody>
 </table>
@@ -99,9 +99,9 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 | 项目          | 说明 |
 |-------------| ---- |
-| 是否允许其它应用调用  | 允许。`EntryAbility` / `ServiceExtAbility` 声明 `exported=true`，Telephony 等系统组件可通过 Want 拉起 |
-| 谁能调用        | 主要由 Telephony 框架拉起 `ServiceExtAbility` 下发 STK 事件；设置 / SIM 卡管理可携带 `slotId` 启动主菜单 |
-| 什么时候能调用     | 应用预置安装后即可被框架拉起；实际 STK 业务依赖 SIM 卡下发主动式命令 |
+| 是否允许其它应用拉起  | 允许。`EntryAbility` / `ServiceExtAbility` 声明 `exported=true`，Telephony 等系统组件可通过 Want 拉起 |
+| 谁能拉起        | 主要由 Telephony 框架拉起 `ServiceExtAbility` 下发 STK 事件；设置 / SIM 卡管理可携带 `slotId` 启动主菜单 |
+| 什么时候能拉起     | 应用预置安装后即可被框架拉起；实际 STK 业务依赖 SIM 卡下发主动式命令 |
 | 支持的 Want 参数 | `action`（`COMMON_EVENT_STK_*`）、`msgCmd`、`slotId`、`pageUrl` 等（见 `ServiceExtAbility` / `EntryAbility`） |
 | 跨进程协作       | 通过 TelephonyKit API 回传命令结果；通过 Settings / RPC 与 `com.ohos.settings`、`com.ohos.simcardmanagement` 协同完成设置入口与双卡启动 |
 
@@ -111,7 +111,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 ### 环境要求
 
-- OpenHarmony SDK（本工程 `compileSdkVersion` 为 23，`compatibleSdkVersion` / `targetSdkVersion` 为 20）
+- OpenHarmony SDK：compileSdkVersion 26，compatibleSdkVersion 23
 - DevEco Studio 或命令行 Hvigor 工具链
 - 系统签名证书（见 `signature/`）
 
@@ -134,7 +134,7 @@ SimToolKits 采用 ArkTS 语言开发，UI 基于 ArkUI Stage 模型。应用通
 
 对已有模块的功能修改与裁剪
 
-场景1：修改命令解析链路
+**场景1：修改命令解析链路**
 
 需调整某类命令的 Param 创建，可在 `UpDecodeFactory` 中修改对应分支：
 
@@ -153,7 +153,7 @@ private createUpParams(commandType: number): BaseUpParams | undefined {
 }
 ```
 
-场景2：修改命令分发链路
+**场景2：修改命令分发链路**
 
 需调整 `SELECT_ITEM` / 输入类命令的拉起方式，在 `SimToolKitAppService` 中扩展：
 
@@ -174,7 +174,7 @@ switch (upParams.commandType) {
 }
 ```
 
-场景3：修改设置入口
+**场景3：修改设置入口**
 
 需调整 `SET_UP_MENU` 后的入口刷新逻辑，修改 `EntranceHelper`：
 
@@ -196,7 +196,7 @@ public async checkIsHaveMainMenu(
 }
 ```
 
-场景4：修改 UI 组件
+**场景4：修改 UI 组件**
 
 需定制主菜单列表展示，直接修改 `pages/Index.ets`：
 
@@ -238,7 +238,7 @@ List() {
 
 说明：当前工程为单一 `entry` HAP（`com.ohos.simtoolkits`），产品 / 特性 / 公共能力均在同一模块内按目录划分。新能力一般按现有分层扩展；若后续拆分产品形态 HAP，可再新增对应目录并在 `build-profile.json5` 中注册。
 
-步骤1：扩展业务能力
+**步骤1：扩展业务能力**
 
 1. 在 `SimToolKitConstant.ts` 的 `CommandType` 中补充命令类型。
 2. 在 `model/upDecode/` 中新增或扩展对应 Param 解析类，并在 `UpDecodeFactory` 中注册。
@@ -246,7 +246,7 @@ List() {
 4. 如需回传专用结果，在 `model/responseData/` 中补充 Response / Envelope 编码。
 5. 在 `entry/src/ohosTest` 中补充对齐 3GPP TS 27.22 的解析与响应单测，并在测试入口中注册。
 
-步骤2：配置 / 确认 Ability 入口
+**步骤2：配置 / 确认 Ability 入口**
 
 本工程入口已在 `entry/src/main/module.json5` 中声明，扩展能力时通常只需确认权限与 Ability 配置是否满足新场景：
 
@@ -281,7 +281,7 @@ List() {
 }
 ```
 
-步骤3：定制 UI
+**步骤3：定制 UI**
 
 在完成业务能力与 Ability 配置后，按上一节对「已有模块的功能修改与裁剪」中的 UI 组件修改方式扩展菜单页、输入页或弹窗页即可。
 
@@ -320,7 +320,7 @@ simtoolkits
 │     └─module.json5                    # Ability、权限声明
 ├─hvigor                                # 构建工具配置
 ├─signature                             # 签名证书与 profile
-├─build-profile.json5                   # 工程级 SDK / 签名 / product 配置
+├─build-profile.json5                   # 工程配置 / 签名 / product 配置
 ├─oh-package.json5
 ├─OAT.xml                               # 开源合规审计
 ├─LICENSE
