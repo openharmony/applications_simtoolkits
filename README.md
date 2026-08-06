@@ -174,7 +174,7 @@ switch (upParams.commandType) {
 }
 ```
 
-场景3：修改设置入口
+**场景3：修改设置入口**
 
 需调整 `SET_UP_MENU` 后的入口刷新逻辑，修改 `EntranceHelper`：
 
@@ -196,7 +196,7 @@ public async checkIsHaveMainMenu(
 }
 ```
 
-场景4：修改 UI 组件
+**场景4：修改 UI 组件**
 
 需定制主菜单列表展示，直接修改 `pages/Index.ets`：
 
@@ -238,7 +238,7 @@ List() {
 
 说明：当前工程为单一 `entry` HAP（`com.ohos.simtoolkits`），产品 / 特性 / 公共能力均在同一模块内按目录划分。新能力一般按现有分层扩展；若后续拆分产品形态 HAP，可再新增对应目录并在 `build-profile.json5` 中注册。
 
-步骤1：扩展业务能力
+**步骤1：扩展业务能力**
 
 1. 在 `SimToolKitConstant.ts` 的 `CommandType` 中补充命令类型。
 2. 在 `model/upDecode/` 中新增或扩展对应 Param 解析类，并在 `UpDecodeFactory` 中注册。
@@ -246,7 +246,7 @@ List() {
 4. 如需回传专用结果，在 `model/responseData/` 中补充 Response / Envelope 编码。
 5. 在 `entry/src/ohosTest` 中补充对齐 3GPP TS 27.22 的解析与响应单测，并在测试入口中注册。
 
-步骤2：配置 / 确认 Ability 入口
+**步骤2：配置 / 确认 Ability 入口**
 
 本工程入口已在 `entry/src/main/module.json5` 中声明，扩展能力时通常只需确认权限与 Ability 配置是否满足新场景：
 
@@ -281,7 +281,7 @@ List() {
 }
 ```
 
-步骤3：定制 UI
+**步骤3：定制 UI**
 
 在完成业务能力与 Ability 配置后，按上一节对「已有模块的功能修改与裁剪」中的 UI 组件修改方式扩展菜单页、输入页或弹窗页即可。
 
