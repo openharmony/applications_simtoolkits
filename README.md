@@ -67,7 +67,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
     <tr>
       <td>phone / pad</td>
       <td><code>module.json5</code>（<code>deviceTypes: default</code> / <code>tablet</code>）</td>
-      <td>在 <code>module.json5</code> 声明手机（<code>default</code>）与平板（<code>tablet</code>）形态，共用同一套 STK 解析 / 分发 / 页面与 <code>entry</code> HAP</td>
+      <td>在 <code>module.json5</code> 声明手机与平板形态，共用同一套 STK 解析 / 分发 / 页面与 <code>entry</code> HAP</td>
     </tr>
     <tr>
       <td rowspan="4">SIM卡信息展示</td>
@@ -80,7 +80,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
     </tr>
     <tr>
       <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（AllBipParam）</td>
-      <td>支持 BIP 确认 / 提示（应用侧 Alpha ID；执行在 RIL）</td>
+      <td>支持 BIP 确认 / 提示</td>
     </tr>
     <tr>
       <td><code>model/upDecode</code>（LanguageNotificationHelper、LanguageNotificationParam）</td>
@@ -97,7 +97,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
     </tr>
     <tr>
       <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（SetUpCallParam）</td>
-      <td>支持呼叫建立确认（接受 / 拒绝）</td>
+      <td>支持呼叫建立确认</td>
     </tr>
     <tr>
       <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（LaunchBrowserParam）</td>
@@ -106,7 +106,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
     <tr>
       <td>UpDecode解析</td>
       <td><code>model/upDecode</code>（UpDecodeFactory、各 Param）</td>
-      <td>解析 SIM 下发的主动式命令 TLV，生成对应 Param（即命令解析后的结构化数据对象，供后续分发与 UI 展示使用）</td>
+      <td>解析 SIM 下发的主动式命令 TLV，生成对应命令解析后的结构化数据对象 Param，供后续分发与 UI 展示使用</td>
     </tr>
     <tr>
       <td>response编码</td>
@@ -116,12 +116,12 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
     <tr>
       <td>STK命令分发</td>
       <td><code>model</code>（SimToolKitAppService）</td>
-      <td>STK 命令分发：按类型分发到页面 / 弹窗，并驱动回传</td>
+      <td>按类型分发STK命令到页面 / 弹窗，并驱动回传</td>
     </tr>
     <tr>
       <td>子线程解析</td>
       <td><code>workers</code>、<code>common/components</code></td>
-      <td>负责hex编码格式STK命令</td>
+      <td>负责hex编码格式STK命令的异步解析等耗时任务</td>
     </tr>
     <tr>
       <td>STK入口管理</td>

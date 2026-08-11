@@ -68,7 +68,7 @@ Modules:
     <tr>
       <td>phone / pad</td>
       <td><code>module.json5</code> (<code>deviceTypes: default</code> / <code>tablet</code>)</td>
-      <td>Declare phone (<code>default</code>) and tablet (<code>tablet</code>) form factors in <code>module.json5</code>; share the same STK parse / dispatch / pages and <code>entry</code> HAP</td>
+      <td>Declare phone and tablet form factors in <code>module.json5</code>; share the same STK parse / dispatch / pages and <code>entry</code> HAP</td>
     </tr>
     <tr>
       <td rowspan="4">SIM Card Info Display</td>
@@ -81,7 +81,7 @@ Modules:
     </tr>
     <tr>
       <td><code>pages</code> (LauncherDialog), <code>model/upDecode</code> (AllBipParam)</td>
-      <td>Supports BIP confirmation / prompts (Alpha ID in app; execution in RIL)</td>
+      <td>Supports BIP confirmation / prompts </td>
     </tr>
     <tr>
       <td><code>model/upDecode</code> (LanguageNotificationHelper, LanguageNotificationParam)</td>
@@ -98,7 +98,7 @@ Modules:
     </tr>
     <tr>
       <td><code>pages</code> (LauncherDialog), <code>model/upDecode</code> (SetUpCallParam)</td>
-      <td>Supports call-setup confirmation (accept / reject)</td>
+      <td>Supports call-setup confirmation </td>
     </tr>
     <tr>
       <td><code>pages</code> (LauncherDialog), <code>model/upDecode</code> (LaunchBrowserParam)</td>
@@ -107,7 +107,7 @@ Modules:
     <tr>
       <td>UpDecode Parsing</td>
       <td><code>model/upDecode</code> (UpDecodeFactory, Param classes)</td>
-      <td>Parse proactive-command TLVs from the SIM into the corresponding Param (the parsed structured data object used for subsequent dispatch and UI rendering)</td>
+      <td>Parse the proactive‑command TLV delivered by the SIM card, and generate structured‑data object Param after command parsing for subsequent distribution and UI display</td>
     </tr>
     <tr>
       <td>response Encoding</td>
@@ -117,12 +117,12 @@ Modules:
     <tr>
       <td>STK Command Dispatch</td>
       <td><code>model</code> (SimToolKitAppService)</td>
-      <td>STK command dispatch: dispatch by type to pages / dialogs and drive the response</td>
+      <td>dispatch by type to pages / dialogs and drive the response</td>
     </tr>
     <tr>
       <td>Worker Parsing</td>
       <td><code>workers</code>, <code>common/components</code></td>
-      <td>Handles STK commands in hex encoding format</td>
+      <td>Be responsible for time‑consuming tasks such as the asynchronous parsing of STK commands in hex‑encoded format</td>
     </tr>
     <tr>
       <td>STK Entry Management</td>
