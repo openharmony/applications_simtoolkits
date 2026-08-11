@@ -12,7 +12,7 @@ SimToolKits（STK，包名：com.ohos.simtoolkits）是 OpenHarmony 电话子系
 
 - 支持展示 SIM 下发文本、空闲模式文本或刷新提示
 - 支持播放提示音，并可选伴随文本弹窗
-- 支持 BIP 确认 / 提示与回传
+- 支持 BIP确认 / 提示与回传
 - 支持按 SIM 下发语言通知切换系统语言
 
 **SIM卡信息交互**
@@ -23,8 +23,18 @@ SimToolKits（STK，包名：com.ohos.simtoolkits）是 OpenHarmony 电话子系
 - 支持确认后拉起系统浏览器
 - 支持在设置中显隐 STK 应用程序入口
 
-> **说明**：本仓定位为 STK **应用层**。命令解析、会话分发、Terminal Response 编码等基础能力位于公共层（`AppService中枢` / `upDecode解析` / `response编码` / `Worker`）。Modem / RIL 侧实际执行短信、补充业务、USSD、DTMF 等操作。
+> **说明**：本仓定位为 STK **应用层**。命令解析、会话分发、Terminal Response 编码等基础能力位于公共层（`AppService 中枢` / `UpDecode 解析` / `Response 编码` / `Worker`）。
 
+### 术语说明
+
+| 术语 | 全称 / 英文 | 说明 |
+| ---- | ----------- | ---- |
+| Proactive Command | 主动式命令 | SIM 卡主动下发给终端的业务指令（如建菜单、显文本、取输入、BIP 开通道等），由本应用解析并驱动 UI |
+| Terminal Response | 终端响应 | 终端将命令执行结果（成功 / 失败 / 用户取消等）回传给 SIM 卡的报文 |
+| Envelope | 信封 | 终端主动上报给 SIM 卡的事件或用户选择（如菜单项选择），与 Terminal Response 配合完成会话 |
+| BIP | Bearer Independent Protocol（承载无关协议） | STK 中与承载无关的数据通道能力；含 `OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS` 等。本应用侧主要做 Alpha ID 确认 / 提示与回传，实际建链与收发在 Modem / RIL |
+| Alpha ID | — | 命令中携带的可读提示文案，用于弹窗、Toast 等向用户展示 |
+| TLV | Tag-Length-Value | STK 命令与响应的二进制编码结构；公共层 `upDecode` / `responseData` 负责解析与编码 |
 
 ## 架构说明
 
@@ -41,19 +51,24 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 | ---- | -------------- | ---- |
 | 产品层 | phone / pad | 支持手机、平板形态 |
 | 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互 |
-| 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode解析、response编码、AppService中枢、Worker、EntranceHelper、通知工具、超时保活 |
+| 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode 解析、Response 编码、AppService 中枢、Worker、EntranceHelper、通知工具、超时保活 |
 
-特性层模块说明：
+模块说明：
 
 <table>
   <thead>
     <tr>
-      <th>核心能力</th>
-      <th>模块与关键类</th>
+      <th>模块</th>
+      <th>目录与关键类</th>
       <th>说明</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>phone / pad</td>
+      <td><code>module.json5</code>（<code>deviceTypes: default</code> / <code>tablet</code>）</td>
+      <td>在 <code>module.json5</code> 声明手机（<code>default</code>）与平板（<code>tablet</code>）形态，共用同一套 STK 解析 / 分发 / 页面与 <code>entry</code> HAP</td>
+    </tr>
     <tr>
       <td rowspan="4">SIM卡信息展示</td>
       <td><code>model/upDecode</code>（DisplayTextParam、SetUpIdleModeTextParam）</td>
@@ -65,14 +80,14 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
     </tr>
     <tr>
       <td><code>pages</code>（LauncherDialog）、<code>model/upDecode</code>（AllBipParam）</td>
-      <td>支持 BIP 确认 / 提示与回传</td>
+      <td>支持 BIP 确认 / 提示与回传（应用侧 Alpha ID；执行在 RIL）</td>
     </tr>
     <tr>
       <td><code>model/upDecode</code>（LanguageNotificationHelper、LanguageNotificationParam）</td>
       <td>支持按 SIM 下发语言通知切换系统语言</td>
     </tr>
     <tr>
-      <td rowspan="5">SIM卡信息交互</td>
+      <td rowspan="4">SIM卡信息交互</td>
       <td><code>pages</code>（Index）、<code>model/upDecode</code>（SetUpMenuParam、SelectItemParam）</td>
       <td>支持主菜单与子菜单的展示、选择与回传</td>
     </tr>
@@ -89,8 +104,39 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
       <td>支持确认后拉起系统浏览器</td>
     </tr>
     <tr>
+      <td>UpDecode解析</td>
+      <td><code>model/upDecode</code>（UpDecodeFactory、各 Param）</td>
+      <td>解析 SIM 下发的主动式命令 TLV，生成对应 Param</td>
+    </tr>
+    <tr>
+      <td>response编码</td>
+      <td><code>model/responseData</code></td>
+      <td>编码 Terminal Response / Envelope，经 TelephonyKit 回传</td>
+    </tr>
+    <tr>
+      <td>AppService中枢</td>
+      <td><code>model</code>（SimToolKitAppService）</td>
+      <td>STK 命令中枢：按类型分发到页面 / 弹窗，并驱动回传</td>
+    </tr>
+    <tr>
+      <td>Worker</td>
+      <td><code>workers</code>、<code>common/components</code></td>
+      <td>STK 命令 hex 异步解析，以及确认框 / 音调弹窗等可复用 UI 组件</td>
+    </tr>
+    <tr>
+      <td>EntranceHelper</td>
       <td><code>common/helper</code>（EntranceHelper、SettingsDataHelper）</td>
       <td>支持在设置中显隐 STK 应用程序入口</td>
+    </tr>
+    <tr>
+      <td>通知工具</td>
+      <td><code>common/utils</code>（NotificationUtils、UiUtils、UpParamsCacheUtils 等）、<code>common/constant</code>、<code>common/helper</code>（DisplayAndIdleTextHelper）</td>
+      <td>STK 通用能力：通知、拉起 Ability / 浮窗、主菜单缓存、空闲屏文本、命令类型与响应码常量</td>
+    </tr>
+    <tr>
+      <td>超时保活</td>
+      <td><code>common/helper</code>（CustTimeOutHelper）</td>
+      <td>STK 会话命令超时与后台保活，供展示 / 交互模块复用</td>
     </tr>
   </tbody>
 </table>
@@ -100,8 +146,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 | 项目          | 说明 |
 |-------------| ---- |
 | 是否允许其它应用拉起  | 允许。`EntryAbility` / `ServiceExtAbility` 声明 `exported=true`，Telephony 等系统组件可通过 Want 拉起 |
-| 谁能拉起        | 主要由 Telephony 框架拉起 `ServiceExtAbility` 下发 STK 事件；设置 / SIM 卡管理可携带 `slotId` 启动主菜单 |
-| 什么时候能拉起     | 应用预置安装后即可被框架拉起；实际 STK 业务依赖 SIM 卡下发主动式命令 |
+| 拉起场景        | **场景 1（SIM 主动下发）**：应用预置安装后，SIM 卡下发主动式命令时，由 Telephony 框架拉起 `ServiceExtAbility`，携带 `action` / `msgCmd` / `slotId` 等下发 STK 事件并驱动交互。<br>**场景 2（用户从设置进入）**：用户在「设置 / SIM 卡管理 → SIM 应用程序」入口进入时，由设置或 `com.ohos.simcardmanagement` 携带 `slotId`（及可选 `pageUrl`）拉起 `EntryAbility`，打开对应卡槽的 STK 主菜单。 |
 | 支持的 Want 参数 | `action`（`COMMON_EVENT_STK_*`）、`msgCmd`、`slotId`、`pageUrl` 等（见 `ServiceExtAbility` / `EntryAbility`） |
 | 跨进程协作       | 通过 TelephonyKit API 回传命令结果；通过 Settings / RPC 与 `com.ohos.settings`、`com.ohos.simcardmanagement` 协同完成设置入口与双卡启动 |
 
@@ -174,12 +219,12 @@ switch (upParams.commandType) {
 }
 ```
 
-**场景3：修改设置入口**
+**场景3：修改设置中的 STK 入口显隐**
 
-需调整 `SET_UP_MENU` 后的入口刷新逻辑，修改 `EntranceHelper`：
+SIM 下发 / 清除主菜单（`SET_UP_MENU`）后，会调用 `EntranceHelper.checkIsHaveMainMenu`：按该卡槽是否已有主菜单缓存，写入 Settings、发布 `stk_entrance` 事件，并 RPC 通知 `com.ohos.settings` 启用 / 禁用搜索入口，从而控制「设置 → SIM 应用程序」是否可见。需定制显隐策略或双卡 / eSIM 映射时，修改 `EntranceHelper`：
 
 ```typescript
-// common/helper/EntranceHelper.ets — SET_UP_MENU 后刷新设置入口
+// common/helper/EntranceHelper.ets — 按主菜单缓存刷新设置入口
 public async checkIsHaveMainMenu(
   context: common.ServiceExtensionContext | undefined,
   slotId: number
@@ -187,12 +232,13 @@ public async checkIsHaveMainMenu(
   if (!context) {
     return;
   }
+  // 该卡槽是否已有 SET_UP_MENU 缓存的主菜单
   let isHaveMainMenu =
     !CommonUtils.isEmptyObj(UpParamsCacheUtils.getInstance().getMainMenuParamsMemory(slotId));
-  let key = this.getSettingDataKey(slotId);
-  let value = this.getSaveSettingDataValue(slotId, isHaveMainMenu);
-  await settings.setValue(context, key, value);
-  // 再 publish stk_entrance 事件，并 RPC enableSearchItems / disableSearchItems
+  let settingDataKey = this.getSettingDataKey(slotId);
+  let settingDataValue = this.getSaveSettingDataValue(slotId, isHaveMainMenu);
+  await settings.setValue(context, settingDataKey, settingDataValue);
+  // 另写时间戳、publish('stk_entrance')，再 RPC enableSearchItems / disableSearchItems
 }
 ```
 
@@ -238,89 +284,137 @@ List() {
 
 说明：当前工程为单一 `entry` HAP（`com.ohos.simtoolkits`），产品 / 特性 / 公共能力均在同一模块内按目录划分。新能力一般按现有分层扩展；若后续拆分产品形态 HAP，可再新增对应目录并在 `build-profile.json5` 中注册。
 
-**步骤1：扩展业务能力**
+#### 以新增 Proactive Command 支持为例
 
-1. 在 `SimToolKitConstant.ts` 的 `CommandType` 中补充命令类型。
-2. 在 `model/upDecode/` 中新增或扩展对应 Param 解析类，并在 `UpDecodeFactory` 中注册。
-3. 在 `SimToolKitAppService` 的分发逻辑中增加处理分支（拉起 UI 或自动响应）。
-4. 如需回传专用结果，在 `model/responseData/` 中补充 Response / Envelope 编码。
-5. 在 `entry/src/ohosTest` 中补充对齐 3GPP TS 27.22 的解析与响应单测，并在测试入口中注册。
+以下以示例命令 `DEMO_CMD`（`0x7A`，非本仓已实现能力）说明新增一条 Proactive Command 所需的处理流程与关键入口。
 
-**步骤2：配置 / 确认 Ability 入口**
+处理链路：Telephony 下发命令 hex → `ServiceExtAbility` 接入 → `UpDecodeFactory` 解析为 Param → `SimToolKitAppService` 分发 → UI 呈现与用户操作 → `responseData` 编码 Terminal Response / Envelope → TelephonyKit 回传。
 
-本工程入口已在 `entry/src/main/module.json5` 中声明，扩展能力时通常只需确认权限与 Ability 配置是否满足新场景：
+**步骤1：完成命令识别、解析、分发与回传**
 
-```json
+目标：使应用能够识别 `DEMO_CMD`，完成 TLV 解析与命令分发，并按协议回传处理结果。
+
+1）在 `CommandType` 中登记命令类型（须与 Modem / 卡侧下发的命令类型字节一致）：
+
+```typescript
+// common/constant/SimToolKitConstant.ts
+export enum CommandType {
+  // ...
+  DEMO_CMD = 0x7A, // 示例命令
+  // ...
+}
+```
+
+2）新增 Param 解析类，并在 `UpDecodeFactory.createUpParams` 中注册；未注册时，`parseUpData` 无法构造 Param，命令将被丢弃：
+
+```typescript
+// model/upDecode/DemoCmdParam.ets（示例，需新建）
+export class DemoCmdParam extends BaseUpParams {
+  public processMsgList(tlvList: Array<Tlv>): void {
+    super.processMsgList(tlvList);
+    // 按协议解析本命令 TLV，写入 Param 字段
+  }
+}
+
+// model/upDecode/UpDecodeFactory.ets
+case CommandType.DEMO_CMD:
+  result = new DemoCmdParam();
+  break;
+```
+
+3）在 `SimToolKitAppService` 中增加分发分支，将 Param 导向对应 UI 入口（确认框走 `UiUtils.startDialog`，全屏页走 `startInputOrMenuAbility`）：
+
+```typescript
+// model/SimToolKitAppService.ets — handleUpParamDataSecondary
+case CommandType.DEMO_CMD:
+  // UiUtils.startDialog(this.uiContext, this.serviceContext, upParams);
+  // 或：this.startInputOrMenuAbility(upParams.slotId, upParams, PageUrl.PAGE_URL_XXX);
+  break;
+```
+
+4）通过 `SimToolKitResponseManager.sendTerminalResponseData`（BIP 场景使用 `sendBipResponseData`）完成编码与回传。一般命令可复用 `DefaultResponseData`；若需回传专用结果字段，再新增对应编码器。
+
+5）在 `entry/src/ohosTest/ets/test/commandtype/` 补充用例，以命令 hex 驱动解析与 UI 验证，并在 `List.test.ets` 中注册。
+
+**步骤2：核对 Ability 与权限配置**
+
+步骤1已完成命令在业务层的解析、分发与回传逻辑。接下来需核对 `entry/src/main/module.json5` 中的 Ability 与权限声明，确保 Telephony 可将命令送达本应用，且本应用具备拉起 UI 与回传结果的权限。相关入口与权限本仓通常已具备，按新命令实际交互方式确认即可：
+
+```json5
+// entry/src/main/module.json5（节选）
 {
   "module": {
-    "name": "entry",
-    "type": "entry",
-    "srcEntry": "./ets/application/SimToolKitApplication.ets",
     "mainElement": "EntryAbility",
-    "deviceTypes": [
-      "default",
-      "tablet"
-    ],
-    "abilities": [
-      {
-        "name": "EntryAbility",
-        "srcEntry": "./ets/entryability/EntryAbility.ets",
-        "exported": true,
-        "launchType": "singleton"
-      }
-    ],
-    "extensionAbilities": [
-      {
-        "name": "ServiceExtAbility",
-        "srcEntry": "./ets/ServiceExtAbility/ServiceExtAbility.ets",
-        "type": "service",
-        "exported": true
-      }
+    "pages": "$profile:main_pages",
+    "abilities": [{
+      "name": "EntryAbility",
+      "srcEntry": "./ets/entryability/EntryAbility.ets",
+      "exported": true,          // 全屏页入口
+      "launchType": "singleton",
+      "permissions": ["ohos.permission.SET_TELEPHONY_STATE"]
+    }],
+    "extensionAbilities": [{
+      "name": "ServiceExtAbility",
+      "srcEntry": "./ets/ServiceExtAbility/ServiceExtAbility.ets",
+      "type": "service",
+      "exported": true           // Telephony 下发 STK 事件的入口
+    }],
+    "requestPermissions": [
+      "ohos.permission.SET_TELEPHONY_STATE",              // Terminal Response / Envelope 回传
+      "ohos.permission.START_ABILITIES_FROM_BACKGROUND",  // 后台拉起 EntryAbility / 弹窗
+      "ohos.permission.SYSTEM_FLOAT_WINDOW",              // LauncherDialog 浮窗
+      "ohos.permission.KEEP_BACKGROUND_RUNNING"           // STK 会话保活
     ]
   }
 }
 ```
 
-**步骤3：定制 UI**
+| 交互方式 | 所需入口 / 权限 |
+| -------- | --------------- |
+| 确认框 / Toast | `ServiceExtAbility`、`SYSTEM_FLOAT_WINDOW`、回传权限 |
+| 全屏页 | 另需 `EntryAbility`（`exported=true`）、`START_ABILITIES_FROM_BACKGROUND` |
+| 回传处理结果 | `SET_TELEPHONY_STATE` |
 
-在完成业务能力与 Ability 配置后，按上一节对「已有模块的功能修改与裁剪」中的 UI 组件修改方式扩展菜单页、输入页或弹窗页即可。
+**步骤3：完成 UI 侧接入**
 
-若需新增独立页面：
+步骤2已确认命令可进入应用且具备拉起界面与回传的权限。接下来需完成 UI 侧接入，使 Param 字段能够展示给用户，并将用户操作结果交回 `SimToolKitAppService` 完成回传：
 
-1. 在 `pages/` 下新增页面文件；
-2. 如需系统路由注册，在 `resources/base/profile/main_pages.json` 中声明；
-3. 在 `Constants.ts` 补充 `PageUrl`，并由 `SimToolKitAppService` / `EntryAbility` 按命令类型拉起。
+- 确认框：在 `pages/LauncherDialog.ets` 增加 `CommandType.DEMO_CMD` 分支；通常无需修改 `main_pages.json`。
+- 全屏页：新增页面并登记至 `resources/base/profile/main_pages.json`，在 `PageUrl` 中增加路由常量，分发时调用 `startInputOrMenuAbility(..., PageUrl.PAGE_URL_XXX)`。Want 需携带 `pageUrl`、`upParam`、`slotId`，供 `EntryAbility` 执行 `loadContent`。
 
 ## 目录
 
 ```text
 simtoolkits
-├─AppScope                              # 应用级配置与多语言资源
-│  ├─app.json5                          # 包名、版本号等
-│  └─resources/                         # 全局字符串 / 图标等资源
+├─AppScope                              # STK 应用级配置与多语言文案
+│  ├─app.json5                          # 应用包名、版本号
+│  └─resources/                         # STK 全局字符串 / 图标等资源
 ├─docs
-│  └─figures/                           # 架构图
+│  └─figures/                           # STK 架构图
 ├─entry                                 # 唯一 HAP 模块
 │  └─src/main/
 │     ├─ets/
-│     │  ├─application/                 # 全局管理器：应用级生命周期与全局初始化
-│     │  ├─entryability/                # 入口能力：拉起主菜单 / 输入页等 UI
-│     │  ├─ServiceExtAbility/           # 扩展服务：接收电话子系统下发的 STK 事件并分发
-│     │  ├─pages/                       # UI 页面：Index主菜单、SimToolKitInput 输入、确认框 /弹窗等
+│     │  ├─application/                 # STK 应用进程初始化
+│     │  ├─entryability/                # STK UI 入口 Ability：打开主菜单 / GET_INPUT 输入页
+│     │  ├─ServiceExtAbility/           # STK 事件入口：接收 Telephony 下发的主动式命令并交给中枢
+│     │  ├─pages/                       # STK 交互页面
+│     │  │                              #   Index — STK 主菜单 / SELECT_ITEM 子菜单
+│     │  │                              #   SimToolKitInput — GET_INKEY / GET_INPUT 输入页
+│     │  │                              #   LauncherDialog — 确认框 / Toast / PLAY_TONE / BIP 开通道确认
 │     │  ├─model/                       # 业务中枢、TLV 解析、响应编码
-│     │  │  ├─upDecode/                 # 主动式命令解析：建立菜单、展示文本等
-│     │  │  └─responseData/             # 响应数据：终端响应 / Envelope 编码
+│     │  │  ├─upDecode/                 # STK 主动式命令解析（SET_UP_MENU、DISPLAY_TEXT、BIP 等 Param）
+│     │  │  └─responseData/             # STK 回传编码（Terminal Response / 菜单选择 Envelope）
 │     │  ├─common/
-│     │  │  ├─components/               # 通用 UI 组件
-│     │  │  ├─constant/                 # 命令类型、TLV 标签、响应码、页面路由、超时等常量
+│     │  │  ├─components/               # STK 通用UI组件
+│     │  │  ├─constant/                 # STK 命令类型、TLV 标签、响应码、PageUrl、超时常量
 │     │  │  ├─helper/                   # 入口、超时、空闲屏等 Helper
 │     │  │  └─utils/                    # 通知、编码、缓存、上报等工具
 │     │  └─workers/                     # 长时任务异步解析
 │     ├─resources/                      # 模块资源、多语言等
 │     └─module.json5                    # Ability、权限声明
 ├─hvigor                                # 构建工具配置
-├─signature                             # 签名证书与 profile
-├─build-profile.json5                   # 工程配置 / 签名 / product 配置
+├─signature                             # 系统应用签名证书与 profile
+├─build-profile.json5                   # 工程 / 签名 / product 配置
 ├─oh-package.json5
 ├─OAT.xml                               # 开源合规审计
 ├─LICENSE
@@ -336,22 +430,24 @@ simtoolkits
 
 设备类型：`手机`、`平板`（见 `entry/src/main/module.json5`）
 
-权限：SimToolKits 所需的主要权限如下（见 `entry/src/main/module.json5`）
+权限：SimToolKits 所需的主要权限如下（见 `entry/src/main/module.json5`）。使用场景只列与 SIM / STK 业务相关的触发点：
 
-| 权限 | 授权方式 | 使用场景 |
-| ---- | -------- | -------- |
-| ohos.permission.SET_TELEPHONY_STATE | 系统授权 | 回传 Terminal Response / Envelope，处理呼叫建立确认 |
-| ohos.permission.GET_TELEPHONY_STATE | 系统授权 | 查询 SIM / 通话相关状态 |
-| ohos.permission.KEEP_BACKGROUND_RUNNING | 系统授权 | STK 会话期间后台连续任务保活 |
-| ohos.permission.START_ABILITIES_FROM_BACKGROUND | 系统授权 | 后台拉起菜单 / 输入 / 弹窗 Ability |
-| ohos.permission.SYSTEM_FLOAT_WINDOW | 系统授权 | 创建浮窗 / 对话框展示 STK UI |
-| ohos.permission.ACCESS_NOTIFICATION_POLICY | 系统授权 | 空闲模式文本、REFRESH 等通知展示 |
-| ohos.permission.MANAGE_SETTINGS / ACCESS_SYSTEM_SETTINGS | 系统授权 | 读写 Settings，控制设置入口显示与隐藏 |
-| ohos.permission.UPDATE_CONFIGURATION | 系统授权 | 语言通知等配置变更 |
-| ohos.permission.VIBRATE | 系统授权 | PLAY_TONE 等场景振动提示 |
-| ohos.permission.PRIVACY_WINDOW | 系统授权 | 敏感输入场景隐私窗口 |
+| 权限 | 授权方式 | 使用场景（与 SIM / STK 相关） |
+| ---- | -------- | ---------------------------- |
+| ohos.permission.SET_TELEPHONY_STATE | 系统授权 | 用户完成菜单选择、输入、确认 / 拒绝后，向对应卡槽回传 Terminal Response / Envelope；`SET_UP_CALL` 时把接受 / 拒绝结果回给 Telephony |
+| ohos.permission.GET_TELEPHONY_STATE | 系统授权 | 打开 STK 主菜单前查询该卡槽 SIM 是否已就绪（未插卡 / 未激活则退出）；双卡场景取 `getMaxSimCount`、卡标签以区分卡 1 / 卡 2 / eSIM 入口文案 |
+| ohos.permission.START_ABILITIES_FROM_BACKGROUND | 系统授权 | SIM 在后台下发主动式命令时拉起界面：`SELECT_ITEM` / 主菜单 → `EntryAbility` + `Index`；`GET_INKEY` / `GET_INPUT` → `EntryAbility` + `SimToolKitInput`；用户确认 `LAUNCH_BROWSER` 后拉起系统浏览器 |
+| ohos.permission.SYSTEM_FLOAT_WINDOW | 系统授权 | 通过 `LauncherDialog` 浮窗展示需用户确认或提示的命令：如 `DISPLAY_TEXT`、`SET_UP_CALL`、`LAUNCH_BROWSER`、`OPEN_CHANNEL`、`PLAY_TONE` |
+| ohos.permission.KEEP_BACKGROUND_RUNNING | 系统授权 | STK 会话等待用户操作、空闲屏文本监听、事件列表超时时申请后台效能资源，避免会话被系统挂起导致无法回传 |
+| ohos.permission.ACCESS_NOTIFICATION_POLICY | 系统授权 | `SET_UP_IDLE_MODE_TEXT` 在通知栏展示空闲模式文本；`REFRESH` 等刷新提示；锁屏时对确认类命令发锁屏通知提醒用户 |
+| ohos.permission.MANAGE_SETTINGS / ACCESS_SYSTEM_SETTINGS | 系统授权 | SIM 下发 / 清除 `SET_UP_MENU` 后，写入 Settings 的 `stk_entrance`，控制「设置 → 移动网络 → SIM 卡管理 → SIM 应用程序」按卡槽显隐（含双卡 / eSIM） |
+| ohos.permission.UPDATE_CONFIGURATION | 系统授权 | SIM 下发 `LANGUAGE_NOTIFICATION` 时，按卡侧指定语言切换系统语言 |
+| ohos.permission.VIBRATE | 系统授权 | SIM 下发 `PLAY_TONE` 且命令限定字要求振动时，由 `TonePlayer` 按音调时长振动（见 `PlayToneParam.isVibrate`） |
+| ohos.permission.PRIVACY_WINDOW | 系统授权 | `GET_INKEY` / `GET_INPUT` 输入页（`SimToolKitInput`）开启窗口隐私模式，避免密码类输入被截屏 / 录屏 |
 
-支持的主动式命令：`SET_UP_MENU`、`SELECT_ITEM`、`DISPLAY_TEXT`、`GET_INKEY`、`GET_INPUT`、`SET_UP_IDLE_MODE_TEXT`、`PROVIDE_LOCAL_INFORMATION`、`SET_UP_CALL`、`LAUNCH_BROWSER`、`PLAY_TONE`、`SET_UP_EVENT_LIST`、`LANGUAGE_NOTIFICATION`、BIP 相关命令等（部分命令应用侧仅做 Alpha ID 提示，执行在 RIL）
+> **SIM 相关备注**：双卡 / eSIM 下菜单入口、通知、回传均按 `slotId` 隔离；设置入口显隐由各卡是否已有 `SET_UP_MENU` 主菜单缓存决定，与物理卡 / eSIM 形态映射见 `EntranceHelper`。
+
+支持的主动式命令：`SET_UP_MENU`、`SELECT_ITEM`、`DISPLAY_TEXT`、`GET_INKEY`、`GET_INPUT`、`SET_UP_IDLE_MODE_TEXT`、`PROVIDE_LOCAL_INFORMATION`、`SET_UP_CALL`、`LAUNCH_BROWSER`、`PLAY_TONE`、`SET_UP_EVENT_LIST`、`LANGUAGE_NOTIFICATION`，以及 BIP 相关命令（`OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS`）等（部分命令应用侧仅做提示文案展示，通道 / 短信 / USSD 等执行在 RIL）
 
 ## 参与贡献
 
