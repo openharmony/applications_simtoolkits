@@ -25,6 +25,7 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 
 > **Note**: This repository is the STK **application layer**. Command parsing, session dispatch, and Terminal Response encoding live in the common layer (`AppService Hub` / `UpDecode Parsing` / `Response Encoding` / `Worker`).
 
+
 ### Terminology
 
 | Term | Full name | Description |
@@ -32,7 +33,7 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 | Proactive Command | — | A business instruction the SIM issues to the terminal on its own initiative (for example set up menu, display text, get input, BIP open channel); this app parses it and drives the UI |
 | Terminal Response | — | The message that returns command execution results (success / failure / user cancel, and so on) from the terminal to the SIM |
 | Envelope | — | An event or user selection the terminal reports to the SIM (for example menu item selection); used with Terminal Response to complete a session |
-| BIP | Bearer Independent Protocol | STK data-channel capability independent of the bearer, defined in 3GPP TS 31.111; includes `OPEN_CHANNEL`, `CLOSE_CHANNEL`, `RECEIVE_DATA`, `SEND_DATA`, `GET_CHANNEL_STATUS`, and related commands. This app mainly shows Alpha ID confirmation / prompts; link setup and transfer run in Modem / RIL |
+| BIP | Bearer Independent Protocol | STK data-channel capability independent of the bearer, defined in 3GPP TS 31.124 V14.3.0; includes `OPEN_CHANNEL`, `CLOSE_CHANNEL`, `RECEIVE_DATA`, `SEND_DATA`, `GET_CHANNEL_STATUS`, and related commands. This app mainly shows Alpha ID confirmation / prompts; link setup and transfer run in Modem / RIL |
 | Alpha ID | — | Human-readable prompt text carried in a command, shown to the user in dialogs, Toast, and similar UI |
 | TLV | Tag-Length-Value | Binary encoding structure for STK commands and responses; the common layer `upDecode` / `responseData` parses and encodes it |
 
@@ -51,7 +52,7 @@ The overall design can be divided into a product layer, a feature layer, and a c
 | ----- | ------------------------- | ----------- |
 | Product | phone / pad | Supports phone and tablet form factors |
 | Feature | `pages`, `model/upDecode` | SIM Card Info Display, SIM Card Info Interaction |
-| Common | `model/upDecode`, `model/responseData`, `model` (SimToolKitAppService), `workers`, `common/helper` (EntranceHelper), `common/utils` (NotificationUtils), `common/helper` (CustTimeOutHelper) | UpDecode Parsing, Response Encoding, AppService Hub, Worker, EntranceHelper, Notification Tool, Timeout Keep-alive |
+| Common | `model/upDecode`, `model/responseData`, `model` (SimToolKitAppService), `workers`, `common/helper` (EntranceHelper), `common/utils` (NotificationUtils), `common/helper` (CustTimeOutHelper) | UpDecode Parsing, Response Encoding, STK Command Dispatch, Worker Parsing, STK Entry Management, Notification Tool, Timeout Keep-alive |
 
 Modules:
 
@@ -114,19 +115,19 @@ Modules:
       <td>Encode Terminal Response / Envelope and return via TelephonyKit</td>
     </tr>
     <tr>
-      <td>AppService Hub</td>
+      <td>STK Command Dispatch</td>
       <td><code>model</code> (SimToolKitAppService)</td>
-      <td>STK command hub: dispatch by type to pages / dialogs and drive the response</td>
+      <td>STK command dispatch: dispatch by type to pages / dialogs and drive the response</td>
     </tr>
     <tr>
-      <td>Worker</td>
+      <td>Worker Parsing</td>
       <td><code>workers</code>, <code>common/components</code></td>
       <td>Handles STK commands in hex encoding format</td>
     </tr>
     <tr>
-      <td>EntranceHelper</td>
+      <td>STK Entry Management</td>
       <td><code>common/helper</code> (EntranceHelper, SettingsDataHelper)</td>
-      <td>Supports showing / hiding the STK entry in Settings</td>
+      <td>Supports showing / hiding the STK entry in Settings → Mobile network → SIM card management</td>
     </tr>
     <tr>
       <td>Notification Tool</td>
@@ -148,7 +149,7 @@ Modules:
 | Can other apps launch it?   | Yes. `EntryAbility` / `ServiceExtAbility` declare `exported=true`; Telephony and other system components can start them via Want |
 | Launch scenarios            | **Scenario 1 (SIM-initiated):** After the pre-installed app is available, when the SIM issues a proactive command, the Telephony framework starts `ServiceExtAbility` with `action` / `msgCmd` / `slotId` (and related Want params) to deliver the STK event and drive interaction.<br>**Scenario 2 (User from Settings):** When the user opens **Settings → Mobile network → SIM card management → SIM applications**, Settings or `com.ohos.simcardmanagement` starts `EntryAbility` with `slotId` (and optional `pageUrl`) to open the STK main menu for that slot. |
 | Supported Want parameters   | `action` (`COMMON_EVENT_STK_*`), `msgCmd`, `slotId`, `pageUrl`, and so on (see `ServiceExtAbility` / `EntryAbility`) |
-| Cross-process collaboration | Returns command results via TelephonyKit APIs; coordinates Settings entry and dual-SIM launch with `com.ohos.settings` and `com.ohos.simcardmanagement` through Settings / RPC |
+| Cross-process collaboration | Returns command results via TelephonyKit APIs; coordinates STK entry and dual-SIM launch with `com.ohos.settings` and `com.ohos.simcardmanagement` through Settings / RPC |
 
 ## Build
 
@@ -175,7 +176,7 @@ SimToolKits is developed in ArkTS, with UI based on the ArkUI Stage model. The a
 
 ### Developing on Existing Modules
 
-Typical scenarios: customize existing capabilities, such as trimming or adjusting STK command handling, changing UI interaction, or updating Settings entry logic.
+Typical scenarios: customize existing capabilities, such as trimming or adjusting STK command handling, changing UI interaction, or updating STK entry logic.
 
 Modifying or trimming existing modules
 
@@ -231,7 +232,7 @@ switch (upParams.commandType) {
 }
 ```
 
-**Scenario 3: Modify STK entry visibility in Settings**
+**Scenario 3: Modify STK entry visibility**
 
 When the product requires the **Settings → Mobile network → SIM card management → SIM applications** entry to be shown or hidden under different conditions, the entry visibility logic needs to be modified. Examples:
 
@@ -242,7 +243,7 @@ When the product requires the **Settings → Mobile network → SIM card managem
 After the SIM sets up or clears the main menu, the app calls `EntranceHelper.checkIsHaveMainMenu`: based on whether that slot has a cached main menu, it writes Settings, publishes the `stk_entrance` event, and RPCs `com.ohos.settings` to enable / disable the search item. Modify `EntranceHelper`:
 
 ```typescript
-// common/helper/EntranceHelper.ets — refresh Settings entry from main-menu cache
+// common/helper/EntranceHelper.ets — refresh STK entry from main-menu cache
 public async checkIsHaveMainMenu(
   context: common.ServiceExtensionContext | undefined,
   slotId: number
@@ -300,7 +301,7 @@ Common modification entry points:
 | GET_INKEY / GET_INPUT | `entry/src/main/ets/pages/SimToolKitInput.ets` |
 | Confirm / Toast / tone | `entry/src/main/ets/pages/LauncherDialog.ets`, `common/components/` |
 | Command hub | `entry/src/main/ets/model/SimToolKitAppService.ets` |
-| Settings entry | `entry/src/main/ets/common/helper/EntranceHelper.ets` |
+| STK entry | `entry/src/main/ets/common/helper/EntranceHelper.ets` |
 | Shared dialogs / navigation | `entry/src/main/ets/common/components/` |
 
 ### Developing New Feature Capabilities
@@ -470,7 +471,7 @@ Permissions: main permissions required by SimToolKits (see `entry/src/main/modul
 | ohos.permission.VIBRATE | system grant | On SIM `PLAY_TONE` when the command qualifier requests vibration, `TonePlayer` vibrates for the tone duration (see `PlayToneParam.isVibrate`) |
 | ohos.permission.PRIVACY_WINDOW | system grant | On the `GET_INKEY` / `GET_INPUT` page (`SimToolKitInput`), enable window privacy mode so password-style input is not captured by screenshot / screen recording |
 
-> **SIM notes**: Menu entry, notifications, and responses are isolated by `slotId` for dual-SIM / eSIM. Settings entry visibility depends on whether each slot has a cached `SET_UP_MENU` main menu; physical SIM / eSIM mapping is in `EntranceHelper`.
+> **SIM notes**: Menu entry, notifications, and responses are isolated by `slotId` for dual-SIM / eSIM. STK entry visibility depends on whether each slot has a cached `SET_UP_MENU` main menu; physical SIM / eSIM mapping is in `EntranceHelper`.
 
 Supported proactive commands are listed below. For BIP-related commands, the app side mainly shows the Alpha ID prompt text; actual channel setup, data transfer, and SMS bearer execution are in Modem / RIL.
 

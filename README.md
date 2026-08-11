@@ -32,7 +32,7 @@ SimToolKits（STK，包名：com.ohos.simtoolkits）是 OpenHarmony 电话子系
 | Proactive Command | 主动式命令 | SIM 卡主动下发给终端的业务指令（如建菜单、显文本、取输入、BIP 开通道等），由本应用解析并驱动 UI |
 | Terminal Response | 终端响应 | 终端将命令执行结果（成功 / 失败 / 用户取消等）回传给 SIM 卡的报文 |
 | Envelope | 信封 | 终端主动上报给 SIM 卡的事件或用户选择（如菜单项选择），与 Terminal Response 配合完成会话 |
-| BIP | Bearer Independent Protocol（承载无关协议） | STK 中与承载无关的数据通道能力，定义见 3GPP TS 31.111；含 `OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS` 等。本应用侧主要做 Alpha ID 确认 / 提示，实际建链与收发在 Modem / RIL |
+| BIP | Bearer Independent Protocol（承载无关协议） | STK 中与承载无关的数据通道能力，定义见 3GPP TS 31.124 V14.3.0；含 `OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS` 等。本应用侧主要做 Alpha ID 确认 / 提示，实际建链与收发在 Modem / RIL |
 | Alpha ID | — | 命令中携带的可读提示文案，用于弹窗、Toast 等向用户展示 |
 | TLV | Tag-Length-Value | STK 命令与响应的二进制编码结构；公共层 `upDecode` / `responseData` 负责解析与编码 |
 
@@ -47,11 +47,11 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 整体可划分为产品层、特性层、公共层：
 
-| 层次 | 主要目录 / 组件 | 说明 |
-| ---- | -------------- | ---- |
-| 产品层 | phone / pad | 支持手机、平板形态 |
-| 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互 |
-| 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode 解析、Response 编码、AppService 中枢、Worker、EntranceHelper、通知工具、超时保活 |
+| 层次 | 主要目录 / 组件 | 说明                                                      |
+| ---- | -------------- |---------------------------------------------------------|
+| 产品层 | phone / pad | 支持手机、平板形态                                               |
+| 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互                                       |
+| 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode 解析、Response 编码、STK命令分发、子线程解析、STK入口管理、通知工具、超时保活 |
 
 模块说明：
 
@@ -114,19 +114,19 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
       <td>编码 Terminal Response / Envelope，经 TelephonyKit 回传</td>
     </tr>
     <tr>
-      <td>AppService中枢</td>
+      <td>STK命令分发</td>
       <td><code>model</code>（SimToolKitAppService）</td>
-      <td>STK 命令中枢：按类型分发到页面 / 弹窗，并驱动回传</td>
+      <td>STK 命令分发：按类型分发到页面 / 弹窗，并驱动回传</td>
     </tr>
     <tr>
-      <td>Worker</td>
+      <td>子线程解析</td>
       <td><code>workers</code>、<code>common/components</code></td>
       <td>负责hex编码格式STK命令</td>
     </tr>
     <tr>
-      <td>EntranceHelper</td>
+      <td>STK入口管理</td>
       <td><code>common/helper</code>（EntranceHelper、SettingsDataHelper）</td>
-      <td>支持在设置中显隐 STK 应用程序入口</td>
+      <td>支持在设置→移动网络→SIM卡管理中显隐 STK 应用程序入口</td>
     </tr>
     <tr>
       <td>通知工具</td>
@@ -148,7 +148,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 | 是否允许其它应用拉起  | 允许。`EntryAbility` / `ServiceExtAbility` 声明 `exported=true`，Telephony 等系统组件可通过 Want 拉起                                                                                                                                                                                                      |
 | 拉起场景        | **场景 1（SIM 主动下发）**：应用预置安装后，SIM 卡下发主动式命令时，由 Telephony 框架拉起 `ServiceExtAbility`，携带 `action` / `msgCmd` / `slotId` 等下发 STK 事件并驱动交互。<br>**场景 2（用户从设置进入）**：用户在「设置→ 移动网络→  SIM 卡管理 → SIM 应用程序」入口进入时，由设置或 `com.ohos.simcardmanagement` 携带 `slotId`（及可选 `pageUrl`）拉起 `EntryAbility`，打开对应卡槽的 STK 主菜单。 |
 | 支持的 Want 参数 | `action`（`COMMON_EVENT_STK_*`）、`msgCmd`、`slotId`、`pageUrl` 等（见 `ServiceExtAbility` / `EntryAbility`）                                                                                                                                                                                       |
-| 跨进程协作       | 通过 TelephonyKit API 回传命令结果；通过 Settings / RPC 与 `com.ohos.settings`、`com.ohos.simcardmanagement` 协同完成设置入口与双卡启动                                                                                                                                                                              |
+| 跨进程协作       | 通过 TelephonyKit API 回传命令结果；通过 Settings / RPC 与 `com.ohos.settings`、`com.ohos.simcardmanagement` 协同完成设STK入口与双卡启动                                                                                                                                                                              |
 
 ## 编译构建
 
@@ -175,7 +175,7 @@ SimToolKits 采用 ArkTS 语言开发，UI 基于 ArkUI Stage 模型。应用通
 
 ### 基于已有模块的开发
 
-适用场景：对已有能力做功能定制，例如裁剪 / 调整既有 STK 命令处理、修改 UI 交互、调整设置入口逻辑等。
+适用场景：对已有能力做功能定制，例如裁剪 / 调整既有 STK 命令处理、修改 UI 交互、调整STK入口逻辑等。
 
 对已有模块的功能修改与裁剪
 
@@ -231,7 +231,7 @@ switch (upParams.commandType) {
 }
 ```
 
-**场景3：修改设置中的 STK 入口显隐**
+**场景3：修改 STK 入口显隐**
 
 当产品要求在不同条件下控制「设置 → 移动网络 → SIM卡管理 → SIM 应用程序」入口的可见性时，需要修改入口显隐逻辑。例如：
 
@@ -242,7 +242,7 @@ switch (upParams.commandType) {
 SIM 下发 / 清除主菜单后，会调用 `EntranceHelper.checkIsHaveMainMenu`：按该卡槽是否已有主菜单缓存，写入 Settings、发布 `stk_entrance` 事件，并 RPC 通知 `com.ohos.settings` 启用 / 禁用搜索入口。修改点为 `EntranceHelper`：
 
 ```typescript
-// common/helper/EntranceHelper.ets — 按主菜单缓存刷新设置入口
+// common/helper/EntranceHelper.ets — 按主菜单缓存刷新STK入口
 public async checkIsHaveMainMenu(
   context: common.ServiceExtensionContext | undefined,
   slotId: number
@@ -300,7 +300,7 @@ List() {
 | GET_INKEY / GET_INPUT | `entry/src/main/ets/pages/SimToolKitInput.ets` |
 | 确认框 / Toast / 音调 | `entry/src/main/ets/pages/LauncherDialog.ets`、`common/components/` |
 | 命令中枢 | `entry/src/main/ets/model/SimToolKitAppService.ets` |
-| 设置入口 | `entry/src/main/ets/common/helper/EntranceHelper.ets` |
+| STK入口 | `entry/src/main/ets/common/helper/EntranceHelper.ets` |
 | 通用弹框 / 导航 | `entry/src/main/ets/common/components/` |
 
 ### 新特性能力的开发
@@ -470,7 +470,7 @@ simtoolkits
 | ohos.permission.VIBRATE | 系统授权 | SIM 下发 `PLAY_TONE` 且命令限定字要求振动时，由 `TonePlayer` 按音调时长振动（见 `PlayToneParam.isVibrate`） |
 | ohos.permission.PRIVACY_WINDOW | 系统授权 | `GET_INKEY` / `GET_INPUT` 输入页（`SimToolKitInput`）开启窗口隐私模式，避免密码类输入被截屏 / 录屏 |
 
-> **SIM 相关备注**：双卡 / eSIM 下菜单入口、通知、回传均按 `slotId` 隔离；设置入口显隐由各卡是否已有 `SET_UP_MENU` 主菜单缓存决定，与物理卡 / eSIM 形态映射见 `EntranceHelper`。
+> **SIM 相关备注**：双卡 / eSIM 下菜单入口、通知、回传均按 `slotId` 隔离；STK入口显隐由各卡是否已有 `SET_UP_MENU` 主菜单缓存决定，与物理卡 / eSIM 形态映射见 `EntranceHelper`。
 
 支持的主动式命令如下表所示。其中 BIP 相关命令在应用侧主要展示 Alpha ID 提示文案，实际的通道建立、数据收发与短信承载等执行位于 Modem / RIL。
 
