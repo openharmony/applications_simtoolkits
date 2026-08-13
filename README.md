@@ -27,14 +27,14 @@ SimToolKits（STK，包名：com.ohos.simtoolkits）是 OpenHarmony 电话子系
 
 ### 术语说明
 
-| 术语 | 全称 / 英文 | 说明 |
-| ---- | ----------- | ---- |
-| Proactive Command | 主动式命令 | SIM 卡主动下发给终端的业务指令（如建菜单、显文本、取输入、BIP 开通道等），由本应用解析并驱动 UI |
-| Terminal Response | 终端响应 | 终端将命令执行结果（成功 / 失败 / 用户取消等）回传给 SIM 卡的报文 |
-| Envelope | 信封 | 终端主动上报给 SIM 卡的事件或用户选择（如菜单项选择），与 Terminal Response 配合完成会话 |
+| 术语 | 全称 / 英文 | 说明                                                                                                                                                                            |
+| ---- | ----------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Proactive Command | 主动式命令 | SIM 卡主动下发给终端的业务指令（如建菜单、显文本、取输入、BIP 开通道等），由本应用解析并驱动 UI                                                                                                                         |
+| Terminal Response | 终端响应 | 终端将命令执行结果（成功 / 失败 / 用户取消等）回传给 SIM 卡的报文                                                                                                                                        |
+| Envelope | 信封 | 终端主动上报给 SIM 卡的事件或用户选择（如菜单项选择），与 Terminal Response 配合完成会话                                                                                                                      |
 | BIP | Bearer Independent Protocol（承载无关协议） | STK 中与承载无关的数据通道能力，定义见 3GPP TS 31.124 V14.3.0；含 `OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS` 等。本应用侧主要做 Alpha ID 确认 / 提示，实际建链与收发在 Modem / RIL |
-| Alpha ID | — | 命令中携带的可读提示文案，用于弹窗、Toast 等向用户展示 |
-| TLV | Tag-Length-Value | STK 命令与响应的二进制编码结构；公共层 `upDecode` / `responseData` 负责解析与编码 |
+| Alpha ID | 字母标识符 | 主动式命令TLV中的可选字段建立等底层协议执行(0x05)，由SIM卡下发的标识符。本应用侧仅用于界面展示（如菜单标题、确认 / 提示弹窗、Toast、音调伴随文本等），不参与 BIP 建链、呼叫建立等底层协议执行                                                                   |
+| TLV | Tag-Length-Value | STK 命令与响应的二进制编码结构；公共层 `upDecode` / `responseData` 负责解析与编码                                                                                                                     |
 
 ## 架构说明
 
@@ -49,7 +49,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 | 层次 | 主要目录 / 组件 | 说明                                                      |
 | ---- | -------------- |---------------------------------------------------------|
-| 产品层 | phone / pad | 支持手机、平板形态                                               |
+| 产品层 | phone / pad | 支持手机、pad 形态（对应 `deviceTypes` 配置） |
 | 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互                                       |
 | 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode 解析、Response 编码、STK命令分发、子线程解析、STK入口管理、通知工具、超时保活 |
 
@@ -66,7 +66,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
   <tbody>
     <tr>
       <td>phone / pad</td>
-      <td><code>module.json5</code>（<code>deviceTypes: default</code> / <code>tablet</code>）</td>
+      <td><code>module.json5</code></td>
       <td>在 <code>module.json5</code> 声明手机与平板形态，共用同一套 STK 解析 / 分发 / 页面与 <code>entry</code> HAP</td>
     </tr>
     <tr>
@@ -143,7 +143,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 ### 与其它应用的关系
 
-| 项目          | 说明                                                                                                                                                                                                                                                                                         |
+| 维度          | 说明                                                                                                                                                                                                                                                                                         |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 是否允许其它应用拉起  | 允许。`EntryAbility` / `ServiceExtAbility` 声明 `exported=true`，Telephony 等系统组件可通过 Want 拉起                                                                                                                                                                                                      |
 | 拉起场景        | **场景 1（SIM 主动下发）**：应用预置安装后，SIM 卡下发主动式命令时，由 Telephony 框架拉起 `ServiceExtAbility`，携带 `action` / `msgCmd` / `slotId` 等下发 STK 事件并驱动交互。<br>**场景 2（用户从设置进入）**：用户在「设置→ 移动网络→  SIM 卡管理 → SIM 应用程序」入口进入时，由设置或 `com.ohos.simcardmanagement` 携带 `slotId`（及可选 `pageUrl`）拉起 `EntryAbility`，打开对应卡槽的 STK 主菜单。 |
@@ -156,7 +156,7 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 ### 环境要求
 
-- OpenHarmony SDK：compileSdkVersion 26，compatibleSdkVersion 23
+- OpenHarmony SDK：compileSdkVersion 26，compatibleSdkVersion 23，targetSdkVersion 23
 - DevEco Studio 或命令行 Hvigor 工具链
 - 系统签名证书（见 `signature/`）
 
@@ -453,9 +453,9 @@ simtoolkits
 
 运行形态：系统预置应用（`com.ohos.simtoolkits`），依赖 TelephonyKit、通知、浮窗、后台任务等系统能力
 
-设备类型：`手机`、`平板`（见 `entry/src/main/module.json5`）
+设备类型：`default`（手机）、`pad`（平板）（见 `entry/src/main/module.json5` 的 `deviceTypes`）
 
-权限：SimToolKits 所需的主要权限如下（见 `entry/src/main/module.json5`）。使用场景只列与 SIM / STK 业务相关的触发点：
+权限：以下为 `entry/src/main/module.json5` 中 `requestPermissions` 声明项，均有对应业务调用，使用场景只列与 SIM / STK 相关的触发点：
 
 | 权限 | 授权方式 | 使用场景（与 SIM / STK 相关） |
 | ---- | -------- | ---------------------------- |
@@ -469,6 +469,11 @@ simtoolkits
 | ohos.permission.UPDATE_CONFIGURATION | 系统授权 | SIM 下发 `LANGUAGE_NOTIFICATION` 时，按卡侧指定语言切换系统语言 |
 | ohos.permission.VIBRATE | 系统授权 | SIM 下发 `PLAY_TONE` 且命令限定字要求振动时，由 `TonePlayer` 按音调时长振动（见 `PlayToneParam.isVibrate`） |
 | ohos.permission.PRIVACY_WINDOW | 系统授权 | `GET_INKEY` / `GET_INPUT` 输入页（`SimToolKitInput`）开启窗口隐私模式，避免密码类输入被截屏 / 录屏 |
+| ohos.permission.GET_RUNNING_INFO | 系统授权 | `DISPLAY_TEXT` / 空闲屏文本场景下，通过 `abilityManager.getForegroundUIAbilities` / `getTopAbility` 判断桌面或 STK 是否在前台，决定是否立即展示 |
+| ohos.permission.RUNNING_STATE_OBSERVER | 系统授权 | 注册 `appManager` 应用状态观察，监听回到桌面等空闲屏时机后再展示 `DISPLAY_TEXT` / 空闲模式文本 |
+| ohos.permission.INPUT_MONITORING | 系统授权 | `SET_UP_EVENT_LIST` 相关场景下，通过 `inputMonitor` 监听触摸以感知用户操作（见 `UserAbilityHelper`） |
+| ohos.permission.POWER_MANAGER | 系统授权 | 锁屏场景下发确认类命令时调用 `power.wakeup` 唤醒屏幕，再配合锁屏通知提醒用户 |
+| ohos.permission.CALLED_BELOW_LOCK_SCREEN | 系统授权 | 允许在锁屏状态下被拉起 / 展示 STK 浮窗或相关界面，配合锁屏通知完成确认类命令交互 |
 
 > **SIM 相关备注**：双卡 / eSIM 下菜单入口、通知、回传均按 `slotId` 隔离；STK入口显隐由各卡是否已有 `SET_UP_MENU` 主菜单缓存决定，与物理卡 / eSIM 形态映射见 `EntranceHelper`。
 

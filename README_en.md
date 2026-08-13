@@ -34,7 +34,7 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 | Terminal Response | — | The message that returns command execution results (success / failure / user cancel, and so on) from the terminal to the SIM |
 | Envelope | — | An event or user selection the terminal reports to the SIM (for example menu item selection); used with Terminal Response to complete a session |
 | BIP | Bearer Independent Protocol | STK data-channel capability independent of the bearer, defined in 3GPP TS 31.124 V14.3.0; includes `OPEN_CHANNEL`, `CLOSE_CHANNEL`, `RECEIVE_DATA`, `SEND_DATA`, `GET_CHANNEL_STATUS`, and related commands. This app mainly shows Alpha ID confirmation / prompts; link setup and transfer run in Modem / RIL |
-| Alpha ID | — | Human-readable prompt text carried in a command, shown to the user in dialogs, Toast, and similar UI |
+| Alpha ID | alphanumeric identifier | The underlying‑protocol execution (0x05) for optional‑field setup within proactive‑command TLV serves as an identifier delivered by the SIM card. The application layer only employs it for UI presentation, such as menu captions, confirmation/alert pop‑ups, toasts and tone‑accompanying text, and does not take part in low‑level protocol procedures including BIP link establishment and call setup. |
 | TLV | Tag-Length-Value | Binary encoding structure for STK commands and responses; the common layer `upDecode` / `responseData` parses and encodes it |
 
 ## Architecture
@@ -50,7 +50,7 @@ The overall design can be divided into a product layer, a feature layer, and a c
 
 | Layer | Main directories / components | Description |
 | ----- | ------------------------- | ----------- |
-| Product | phone / pad | Supports phone and tablet form factors |
+| Product | phone / pad | Supports phone and pad form factors (see `deviceTypes` in `module.json5`) |
 | Feature | `pages`, `model/upDecode` | SIM Card Info Display, SIM Card Info Interaction |
 | Common | `model/upDecode`, `model/responseData`, `model` (SimToolKitAppService), `workers`, `common/helper` (EntranceHelper), `common/utils` (NotificationUtils), `common/helper` (CustTimeOutHelper) | UpDecode Parsing, Response Encoding, STK Command Dispatch, Worker Parsing, STK Entry Management, Notification Tool, Timeout Keep-alive |
 
@@ -67,8 +67,8 @@ Modules:
   <tbody>
     <tr>
       <td>phone / pad</td>
-      <td><code>module.json5</code> (<code>deviceTypes: default</code> / <code>tablet</code>)</td>
-      <td>Declare phone and tablet form factors in <code>module.json5</code>; share the same STK parse / dispatch / pages and <code>entry</code> HAP</td>
+      <td><code>module.json5</code></td>
+      <td>Declare phone and pad form factors in <code>module.json5</code>; share the same STK parse / dispatch / pages and <code>entry</code> HAP</td>
     </tr>
     <tr>
       <td rowspan="4">SIM Card Info Display</td>
@@ -157,7 +157,7 @@ Source code is organized as product / feature / common layers inside a single `e
 
 ### Environment Requirements
 
-- OpenHarmony SDK: compileSdkVersion 26, compatibleSdkVersion 23
+- OpenHarmony SDK: compileSdkVersion 26, compatibleSdkVersion 23, targetSdkVersion 23
 - DevEco Studio or the Hvigor command-line toolchain
 - System signing certificates (see `signature/`)
 
@@ -268,7 +268,7 @@ When the product needs operator brand customization, adaptation for different de
 - The main menu list needs to show operator brand icons, badges, or secondary descriptions;
 - The input page (`GET_INKEY` / `GET_INPUT`) needs password visibility toggle or input-format hints;
 - Confirm dialogs / Toasts need style adjustments, button text changes, or risk warnings;
-- Tablet and other large-screen devices need layout and font-size adjustments.
+- Pad and other large-screen devices need layout and font-size adjustments.
 
 To customize the main menu list, edit `pages/Index.ets`:
 
@@ -454,9 +454,9 @@ Language: ArkTS
 
 Runtime form: pre-installed system application (`com.ohos.simtoolkits`), depending on TelephonyKit, notification, floating window, background task, and related system capabilities
 
-Device types: `phone`, `tablet` (see `entry/src/main/module.json5`)
+Device types: `default` (phone), `pad` (see `deviceTypes` in `entry/src/main/module.json5`)
 
-Permissions: main permissions required by SimToolKits (see `entry/src/main/module.json5`). Usage below lists only SIM / STK trigger points:
+Permissions: items below are the `requestPermissions` declared in `entry/src/main/module.json5`; each maps to an actual call site. Usage lists only SIM / STK trigger points:
 
 | Permission | Grant mode | Usage (SIM / STK specific) |
 | ---------- | ---------- | -------------------------- |
@@ -470,6 +470,11 @@ Permissions: main permissions required by SimToolKits (see `entry/src/main/modul
 | ohos.permission.UPDATE_CONFIGURATION | system grant | On SIM `LANGUAGE_NOTIFICATION`, switch the system language to the language specified by the card |
 | ohos.permission.VIBRATE | system grant | On SIM `PLAY_TONE` when the command qualifier requests vibration, `TonePlayer` vibrates for the tone duration (see `PlayToneParam.isVibrate`) |
 | ohos.permission.PRIVACY_WINDOW | system grant | On the `GET_INKEY` / `GET_INPUT` page (`SimToolKitInput`), enable window privacy mode so password-style input is not captured by screenshot / screen recording |
+| ohos.permission.GET_RUNNING_INFO | system grant | For `DISPLAY_TEXT` / idle-mode text, use `abilityManager.getForegroundUIAbilities` / `getTopAbility` to decide whether Home or STK is in the foreground before showing UI |
+| ohos.permission.RUNNING_STATE_OBSERVER | system grant | Register an `appManager` application-state observer and show `DISPLAY_TEXT` / idle-mode text after the device returns to the idle (Home) screen |
+| ohos.permission.INPUT_MONITORING | system grant | For `SET_UP_EVENT_LIST`-related flows, monitor touch via `inputMonitor` to detect user activity (see `UserAbilityHelper`) |
+| ohos.permission.POWER_MANAGER | system grant | On lock-screen confirm-style commands, call `power.wakeup` to wake the screen, then notify the user |
+| ohos.permission.CALLED_BELOW_LOCK_SCREEN | system grant | Allow STK to be started / show floating UI while the screen is locked, together with lock-screen notifications for confirm-style commands |
 
 > **SIM notes**: Menu entry, notifications, and responses are isolated by `slotId` for dual-SIM / eSIM. STK entry visibility depends on whether each slot has a cached `SET_UP_MENU` main menu; physical SIM / eSIM mapping is in `EntranceHelper`.
 
