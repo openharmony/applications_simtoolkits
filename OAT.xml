@@ -20,13 +20,12 @@
 <configuration>
     <oatconfig>
         <licensefile></licensefile>
+        <policylist>
+            <policy name="projectPolicy" desc="">
+                <policyitem type="copyright" name="Huawei Technologies Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
+            </policy>
+        </policylist>
         <filefilterlist>
-            <filefilter name="defaultPolicyFilter" desc="Filters for compatibility，license header policies">
-                <filteritem type="filename" name="*.json5" desc="build config file"/>
-            </filefilter>
-            <filefilter name="copyrightPolicyFilter" desc="Filters for copyright header policies">
-                <filteritem type="filename" name="*.json5" desc="build config file"/>
-            </filefilter>
             <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
                 <filteritem type="filepath" name="entry/src/main/resources/base/media/ic_launcher_background.webp" desc="self developed image"/>
                 <filteritem type="filepath" name="entry/src/main/resources/base/media/ic_launcher_foreground.png" desc="self developed image"/>
@@ -36,8 +35,9 @@
                 <filteritem type="filepath" name="entry/src/ohosTest/resources/base/media/ic_launcher_sim_toolkit.png" desc="self developed image"/>
                 <filteritem type="filepath" name="entry/src/main/resources/base/media/starting_window.png" desc="self developed image"/>
                 <filteritem type="filepath" name="entry/src/main/resources/dark/media/ic_volume.png" desc="self developed image"/>
+                <filteritem type="filepath" name="docs/figures/simtoolkits_ipc.png" desc="self developed image"/>
+                <filteritem type="filepath" name="docs/figures/simtoolkits_ipc_en.png" desc="self developed image"/>
             </filefilter>
-
         </filefilterlist>
     </oatconfig>
 </configuration>
