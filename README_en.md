@@ -23,8 +23,6 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 - Supports launching the system browser after confirmation
 - Supports showing / hiding the STK entry in Settings
 
-> **Note**: This repository is the STK **application layer**. Command parsing, session dispatch, and Terminal Response encoding live in the common layer (`AppService Hub` / `UpDecode Parsing` / `Response Encoding` / `Worker`).
-
 
 ### Terminology
 
@@ -33,8 +31,7 @@ This is a pre-installed system application. It supports single-SIM, dual-SIM, an
 | Proactive Command | — | A business instruction the SIM issues to the terminal on its own initiative (for example set up menu, display text, get input, BIP open channel); this app parses it and drives the UI |
 | Terminal Response | — | The message that returns command execution results (success / failure / user cancel, and so on) from the terminal to the SIM |
 | Envelope | — | An event or user selection the terminal reports to the SIM (for example menu item selection); used with Terminal Response to complete a session |
-| BIP | Bearer Independent Protocol | STK data-channel capability independent of the bearer, defined in 3GPP TS 31.124 V14.3.0; includes `OPEN_CHANNEL`, `CLOSE_CHANNEL`, `RECEIVE_DATA`, `SEND_DATA`, `GET_CHANNEL_STATUS`, and related commands. This app mainly shows Alpha ID confirmation / prompts; link setup and transfer run in Modem / RIL |
-| Alpha ID | alphanumeric identifier | The underlying‑protocol execution (0x05) for optional‑field setup within proactive‑command TLV serves as an identifier delivered by the SIM card. The application layer only employs it for UI presentation, such as menu captions, confirmation/alert pop‑ups, toasts and tone‑accompanying text, and does not take part in low‑level protocol procedures including BIP link establishment and call setup. |
+| BIP | Bearer Independent Protocol | STK bearer‑independent data channel capabilities, as defined in 3GPP TS 31.124 V14.3.0; including OPEN_CHANNEL, CLOSE_CHANNEL, RECEIVE_DATA, SEND_DATA, GET_CHANNEL_STATUS, etc. From the application side, only pop‑up confirmation / prompt UI is implemented. The actual link establishment and data transmission/reception are handled in Modem / RIL |
 | TLV | Tag-Length-Value | Binary encoding structure for STK commands and responses; the common layer `upDecode` / `responseData` parses and encodes it |
 
 ## Architecture
@@ -50,7 +47,7 @@ The overall design can be divided into a product layer, a feature layer, and a c
 
 | Layer | Main directories / components | Description |
 | ----- | ------------------------- | ----------- |
-| Product | phone / pad | Supports phone and pad form factors (see `deviceTypes` in `module.json5`) |
+| Product | phone / pad | Supports phone and pad form factors |
 | Feature | `pages`, `model/upDecode` | SIM Card Info Display, SIM Card Info Interaction |
 | Common | `model/upDecode`, `model/responseData`, `model` (SimToolKitAppService), `workers`, `common/helper` (EntranceHelper), `common/utils` (NotificationUtils), `common/helper` (CustTimeOutHelper) | UpDecode Parsing, Response Encoding, STK Command Dispatch, Worker Parsing, STK Entry Management, Notification Tool, Timeout Keep-alive |
 
@@ -478,7 +475,7 @@ Permissions: items below are the `requestPermissions` declared in `entry/src/mai
 
 > **SIM notes**: Menu entry, notifications, and responses are isolated by `slotId` for dual-SIM / eSIM. STK entry visibility depends on whether each slot has a cached `SET_UP_MENU` main menu; physical SIM / eSIM mapping is in `EntranceHelper`.
 
-Supported proactive commands are listed below. For BIP-related commands, the app side mainly shows the Alpha ID prompt text; actual channel setup, data transfer, and SMS bearer execution are in Modem / RIL.
+Supported proactive commands are listed below.
 
 | Command | Meaning |
 | ------- | ------- |
