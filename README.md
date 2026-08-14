@@ -23,8 +23,6 @@ SimToolKits（STK，包名：com.ohos.simtoolkits）是 OpenHarmony 电话子系
 - 支持确认后拉起系统浏览器
 - 支持在设置中显隐 STK 应用程序入口
 
-> **说明**：本仓定位为 STK **应用层**。命令解析、会话分发、Terminal Response 编码等基础能力位于公共层（`AppService 中枢` / `UpDecode 解析` / `Response 编码` / `Worker`）。
-
 ### 术语说明
 
 | 术语 | 全称 / 英文 | 说明                                                                                                                                                                            |
@@ -32,8 +30,7 @@ SimToolKits（STK，包名：com.ohos.simtoolkits）是 OpenHarmony 电话子系
 | Proactive Command | 主动式命令 | SIM 卡主动下发给终端的业务指令（如建菜单、显文本、取输入、BIP 开通道等），由本应用解析并驱动 UI                                                                                                                         |
 | Terminal Response | 终端响应 | 终端将命令执行结果（成功 / 失败 / 用户取消等）回传给 SIM 卡的报文                                                                                                                                        |
 | Envelope | 信封 | 终端主动上报给 SIM 卡的事件或用户选择（如菜单项选择），与 Terminal Response 配合完成会话                                                                                                                      |
-| BIP | Bearer Independent Protocol（承载无关协议） | STK 中与承载无关的数据通道能力，定义见 3GPP TS 31.124 V14.3.0；含 `OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS` 等。本应用侧主要做 Alpha ID 确认 / 提示，实际建链与收发在 Modem / RIL |
-| Alpha ID | 字母标识符 | 主动式命令TLV中的可选字段建立等底层协议执行(0x05)，由SIM卡下发的标识符。本应用侧仅用于界面展示（如菜单标题、确认 / 提示弹窗、Toast、音调伴随文本等），不参与 BIP 建链、呼叫建立等底层协议执行                                                                   |
+| BIP | Bearer Independent Protocol（承载无关协议） | STK 中与承载无关的数据通道能力，定义见 3GPP TS 31.124 V14.3.0；含 `OPEN_CHANNEL`、`CLOSE_CHANNEL`、`RECEIVE_DATA`、`SEND_DATA`、`GET_CHANNEL_STATUS` 等。本应用侧主要做弹窗 确认/提示，实际建链与收发在 Modem / RIL |
 | TLV | Tag-Length-Value | STK 命令与响应的二进制编码结构；公共层 `upDecode` / `responseData` 负责解析与编码                                                                                                                     |
 
 ## 架构说明
@@ -47,10 +44,10 @@ SimToolKits 采用分层与模块化设计，按产品形态、业务特性与�
 
 整体可划分为产品层、特性层、公共层：
 
-| 层次 | 主要目录 / 组件 | 说明                                                      |
-| ---- | -------------- |---------------------------------------------------------|
-| 产品层 | phone / pad | 支持手机、pad 形态（对应 `deviceTypes` 配置） |
-| 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互                                       |
+| 层次 | 主要目录 / 组件 | 说明                                                     |
+| ---- | -------------- |--------------------------------------------------------|
+| 产品层 | phone / pad | 支持手机、平板形态                                              |
+| 特性层 | `pages`、`model/upDecode` | SIM卡信息展示、SIM卡信息交互                                      |
 | 公共层 | `model/upDecode`、`model/responseData`、`model`（SimToolKitAppService）、`workers`、`common/helper`（EntranceHelper）、`common/utils`（NotificationUtils）、`common/helper`（CustTimeOutHelper） | UpDecode 解析、Response 编码、STK命令分发、子线程解析、STK入口管理、通知工具、超时保活 |
 
 模块说明：
@@ -477,7 +474,7 @@ simtoolkits
 
 > **SIM 相关备注**：双卡 / eSIM 下菜单入口、通知、回传均按 `slotId` 隔离；STK入口显隐由各卡是否已有 `SET_UP_MENU` 主菜单缓存决定，与物理卡 / eSIM 形态映射见 `EntranceHelper`。
 
-支持的主动式命令如下表所示。其中 BIP 相关命令在应用侧主要展示 Alpha ID 提示文案，实际的通道建立、数据收发与短信承载等执行位于 Modem / RIL。
+支持的主动式命令如下表所示。
 
 | 命令 | 含义 |
 | ---- | ---- |
